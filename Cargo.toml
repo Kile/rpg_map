@@ -1,0 +1,11 @@
+[package]
+name = "Rust_map"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+geo = "0.29.3"
+minifb = "0.28.0"
+png = "0.17.16"
+rand = "0.9.0"
+rng = "0.1.0"
