@@ -1,36 +1,143 @@
-use crate::structs::map::MapType;
-use crate::structs::path::astar;
+use crate::structs::path::{astar, PathPoint};
 use core::panic;
+use pyo3::prelude::*;
 use std::vec;
-// use std::fs::File;
-// use std::io::Write;
 
 use crate::structs::map::Map;
 use geo::{Contains, Coord, LineString, Point, Polygon};
 
+#[pyclass]
+#[derive(Clone)]
 pub struct Travel {
     pub map: Map,
-    current_location: (u32, u32),
-    destination: (u32, u32),
-    draw_obstacles: bool,
-    pub computed_path: Vec<(u32, u32)>,
+    pub computed_path: Vec<PathPoint>,
 }
 
+/// Give all 1s a X px "buffer" of 1s around them
+/// For efficiency reasons it will only do this if a 0
+/// is within a 1px radius of the 1
+fn buffer_edges(reduced: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+    let buffer_size = 5;
+    let mut new = reduced.clone();
+    // We do not want to mutate the original in the loop
+
+    for y in 0..reduced.len() {
+        for x in 0..reduced[y].len() {
+            if reduced[y][x] == 0 {
+                continue;
+            }
+
+            let mut buffer = false;
+            for i in -1..2 {
+                for j in -1..2 {
+                    if y as i32 + i < 0
+                        || y as i32 + i >= reduced.len() as i32
+                        || x as i32 + j < 0
+                        || x as i32 + j >= reduced[y].len() as i32
+                    {
+                        continue;
+                    }
+
+                    if reduced[(y as i32 + i) as usize][(x as i32 + j) as usize] == 0 {
+                        buffer = true;
+                        break;
+                    }
+                }
+            }
+
+            if buffer {
+                for i in -buffer_size..(buffer_size + 1) {
+                    for j in -buffer_size..(buffer_size + 1) {
+                        if y as i32 + i < 0
+                            || y as i32 + i >= reduced.len() as i32
+                            || x as i32 + j < 0
+                            || x as i32 + j >= reduced[y].len() as i32
+                        {
+                            continue;
+                        }
+
+                        new[(y as i32 + i) as usize][(x as i32 + j) as usize] = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    new
+}
+
+/// Converts the image to a grid where 0 is a free space and 1 is an obstacle
+pub fn image_to_grid(map: &mut Map) -> Vec<Vec<u8>> {
+    let mut grid = vec![vec![0; (map.width) as usize]; (map.height) as usize];
+    let binding: Vec<u8> = map.get_bits();
+    for (i, byte) in binding.chunks_exact(4).enumerate() {
+        let x = i % map.width as usize;
+        let y = i / map.width as usize;
+        let alpha = byte[3]; // Alpha channel
+        if alpha == 0 {
+            grid[y][x] = 1; // Transparent pixels -> Obstacle
+        }
+    }
+
+    // Step 2: Process polygon obstacles
+    let mut polygons: Vec<Polygon> = vec![];
+    for obstacle in &map.obstacles {
+        if obstacle.len() < 3 {
+            continue; // Skip invalid polygons
+        }
+        let exterior = obstacle
+            .iter()
+            .map(|&coords| Coord {
+                x: coords.0 as f64,
+                y: coords.1 as f64,
+            })
+            .collect::<Vec<Coord>>();
+
+        let polygon = Polygon::new(LineString::from(exterior), vec![]);
+        polygons.push(polygon);
+
+    }
+
+    for y in 0..map.height {
+        for x in 0..map.width {
+            for polygon in &polygons {
+                if polygon.contains(&Point::new(x as f64, y as f64)) {
+                    grid[y as usize][x as usize] = 1; // Mark obstacle
+                }
+            }
+        }
+        
+    }
+
+    // Step 3: Buffer edges of obstacles
+    grid = buffer_edges(grid);
+
+    grid
+}
+
+#[pymethods]
 impl Travel {
-    pub fn new(mut map: Map, current_location: (u32, u32), destination: (u32, u32)) -> Travel {
-        let mut grid = Self::image_to_grid(&mut map);
+    #[new]
+    pub fn new(
+        mut map: Map,
+        current_location: (u32, u32),
+        destination: (u32, u32),
+    ) -> PyResult<Travel> {
+        // draw obstacles on the map
+        let mut grid = image_to_grid(&mut map);
 
         // put in start and end
         grid[current_location.1 as usize][current_location.0 as usize] = 2;
         grid[destination.1 as usize][destination.0 as usize] = 3;
 
-        let path = astar(&grid).unwrap();
-        Travel {
-            map,
-            current_location,
-            destination,
-            draw_obstacles: false,
-            computed_path: path,
+        match astar(&grid) {
+            Some(path) => Ok(Travel {
+                map,
+                computed_path: path,
+            }),
+            None => Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
+                "No path found",
+            )),
         }
     }
 
@@ -38,8 +145,9 @@ impl Travel {
     /// obstacles and black are the free spaces. This is to debug if
     /// a fault is with the pathfinding algorithm or the map reduction
     /// algorithm.
-    pub fn dbg_map(map: &mut Map) -> Vec<u8> {
-        let grid = Self::image_to_grid(map);
+    #[staticmethod]
+    pub fn dbg_map(mut map: Map) -> Vec<u8> {
+        let grid = image_to_grid(&mut map);
         let mut long_map = vec![0; map.width as usize * map.height as usize * 4];
         for y in 0..grid.len() {
             for x in 0..grid[y].len() {
@@ -59,139 +167,6 @@ impl Travel {
                     .copy_from_slice(&byte);
             }
         }
-        // Self::draw_obstacles(&mut long_map, map);
         long_map
-    }
-
-    /// Give all 1s a X px "buffer" of 1s around them
-    /// For efficiency reasons it will only do this if a 0
-    /// is within a 1px radius of the 1
-    fn buffer_edges(reduced: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
-        let buffer_size = 5;
-        let mut new = reduced.clone(); // We do not want to mutate the original
-
-        for y in 0..reduced.len() {
-            for x in 0..reduced[y].len() {
-                if reduced[y][x] == 0 {
-                    continue;
-                }
-
-                let mut buffer = false;
-                for i in -1..2 {
-                    for j in -1..2 {
-                        if y as i32 + i < 0
-                            || y as i32 + i >= reduced.len() as i32
-                            || x as i32 + j < 0
-                            || x as i32 + j >= reduced[y].len() as i32
-                        {
-                            continue;
-                        }
-
-                        if reduced[(y as i32 + i) as usize][(x as i32 + j) as usize] == 0 {
-                            buffer = true;
-                            break;
-                        }
-                    }
-                }
-
-                if buffer {
-                    for i in -buffer_size..(buffer_size + 1) {
-                        for j in -buffer_size..(buffer_size + 1) {
-                            if y as i32 + i < 0
-                                || y as i32 + i >= reduced.len() as i32
-                                || x as i32 + j < 0
-                                || x as i32 + j >= reduced[y].len() as i32
-                            {
-                                continue;
-                            }
-
-                            new[(y as i32 + i) as usize][(x as i32 + j) as usize] = 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        new
-    }
-
-    /// Converts the image to a grid where 0 is a free space and 1 is an obstacle
-    pub fn image_to_grid(map: &mut Map) -> Vec<Vec<u8>> {
-        let mut grid = vec![vec![0; (map.width) as usize]; (map.height) as usize];
-        let binding: Vec<u8> = map.full_image();
-        for (i, byte) in binding.chunks_exact(4).enumerate() {
-            let x = i % map.width as usize;
-            let y = i / map.width as usize;
-            let alpha = byte[3]; // Alpha channel
-            if alpha == 0 {
-                grid[y][x] = 1; // Transparent pixels -> Obstacle
-            }
-        }
-
-        // Step 2: Process polygon obstacles
-        for obstacle in &map.obstacles {
-            if obstacle.len() < 3 {
-                continue; // Skip invalid polygons
-            }
-            let exterior = obstacle
-                .iter()
-                .map(|&coords| Coord {
-                    x: coords.0 as f64,
-                    y: coords.1 as f64,
-                })
-                .collect::<Vec<Coord>>();
-
-            let polygon = Polygon::new(LineString::from(exterior), vec![]);
-
-            for y in 0..map.height {
-                for x in 0..map.width {
-                    let point = Point::new(x as f64, y as f64);
-                    if polygon.contains(&point) {
-                        grid[y as usize][x as usize] = 1; // Mark obstacle
-                    }
-                }
-            }
-        }
-
-        // Step 3: Buffer edges of obstacles
-        grid = Self::buffer_edges(grid);
-
-        grid
-    }
-
-    fn draw_obstacles(bytes: &mut Vec<u8>, map: &Map) {
-        for obstacle in &map.obstacles {
-            if obstacle.len() < 3 {
-                continue; // Skip invalid polygons
-            }
-            let exterior = obstacle
-                .iter()
-                .map(|&coords| Coord {
-                    x: coords.0 as f64,
-                    y: coords.1 as f64,
-                })
-                .collect::<Vec<Coord>>();
-
-            let polygon = Polygon::new(LineString::from(exterior), vec![]);
-
-            for (i, ref mut chunk) in bytes.chunks_exact_mut(4).enumerate() {
-                let mut pixel = [0; 4];
-                pixel.copy_from_slice(chunk);
-                let alpha = pixel[3];
-                if alpha == 0 {
-                    continue;
-                }
-
-                let x = i % map.width as usize;
-                let y = i / map.width as usize;
-                let point = Point::new(x as f64, y as f64);
-                if polygon.contains(&point) {
-                    chunk[0] = 255;
-                    chunk[1] = 255;
-                    chunk[2] = 255;
-                    chunk[3] = 255;
-                }
-            }
-        }
     }
 }

@@ -1,5 +1,19 @@
+use pyo3::prelude::pyclass;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap};
+
+#[pyclass]
+#[derive(Clone, PartialEq, Eq, Debug, Copy)]
+pub struct PathPoint {
+    pub x: u32,
+    pub y: u32,
+}
+
+impl PathPoint {
+    pub fn from_tuple(t: (u32, u32)) -> Self {
+        PathPoint { x: t.0, y: t.1 }
+    }
+}
 
 #[derive(Clone, Eq, PartialEq)]
 struct Node {
@@ -22,7 +36,7 @@ impl PartialOrd for Node {
     }
 }
 
-pub fn astar(grid: &Vec<Vec<u8>>) -> Option<Vec<(u32, u32)>> {
+pub fn astar(grid: &[Vec<u8>]) -> Option<Vec<PathPoint>> {
     let rows = grid.len() as u32;
     if rows == 0 {
         return None;
@@ -64,7 +78,7 @@ pub fn astar(grid: &Vec<Vec<u8>>) -> Option<Vec<(u32, u32)>> {
             return reconstruct_path(came_from, (end_x, end_y));
         }
 
-        let neighbors = get_neighbors(current.x, current.y, &grid);
+        let neighbors = get_neighbors(current.x, current.y, grid);
 
         for (nx, ny) in neighbors {
             let tentative_g_score = g_score.get(&(current.x, current.y)).unwrap_or(&u32::MAX) + 1;
@@ -90,7 +104,7 @@ fn heuristic(x1: u32, y1: u32, x2: u32, y2: u32) -> u32 {
     (x1.abs_diff(x2)) + (y1.abs_diff(y2))
 }
 
-fn get_neighbors(x: u32, y: u32, grid: &Vec<Vec<u8>>) -> Vec<(u32, u32)> {
+fn get_neighbors(x: u32, y: u32, grid: &[Vec<u8>]) -> Vec<(u32, u32)> {
     let rows = grid.len() as u32;
     let cols = grid[0].len() as u32;
     let mut neighbors = Vec::new();
@@ -126,12 +140,12 @@ fn get_neighbors(x: u32, y: u32, grid: &Vec<Vec<u8>>) -> Vec<(u32, u32)> {
 fn reconstruct_path(
     came_from: HashMap<(u32, u32), (u32, u32)>,
     current: (u32, u32),
-) -> Option<Vec<(u32, u32)>> {
-    let mut total_path = vec![current];
+) -> Option<Vec<PathPoint>> {
+    let mut total_path = vec![PathPoint::from_tuple(current)];
     let mut current = current;
 
     while let Some(&parent) = came_from.get(&current) {
-        total_path.push(parent);
+        total_path.push(PathPoint::from_tuple(parent));
         current = parent;
     }
 
@@ -148,7 +162,14 @@ mod tests {
         let grid = vec![vec![2, 0, 0], vec![0, 0, 0], vec![0, 0, 3]];
 
         let path = astar(&grid).unwrap();
-        assert_eq!(path, vec![(0, 0), (1, 1), (2, 2)]);
+        assert_eq!(
+            path,
+            vec![
+                PathPoint::from_tuple((0, 0)),
+                PathPoint::from_tuple((1, 1)),
+                PathPoint::from_tuple((2, 2))
+            ]
+        );
     }
 
     #[test]
@@ -162,6 +183,15 @@ mod tests {
         ];
 
         let path = astar(&grid).unwrap();
-        assert_eq!(path, vec![(0, 2), (1, 2), (2, 2), (3, 2), (4, 2)]);
+        assert_eq!(
+            path,
+            vec![
+                PathPoint::from_tuple((0, 2)),
+                PathPoint::from_tuple((1, 2)),
+                PathPoint::from_tuple((2, 2)),
+                PathPoint::from_tuple((3, 2)),
+                PathPoint::from_tuple((4, 2))
+            ]
+        );
     }
 }
