@@ -1,7 +1,7 @@
 name: Publish to PyPI
 
 on:
-  commit:
+  push:
     branches:
       - main
 
