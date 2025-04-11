@@ -1,10 +1,10 @@
 from rpg_map import Travel, Map, MapType, PathStyle
 from PIL import Image
 
-LOCAL_DIR = "test_assets/map.png"
-BACKGROUND_DIR = "test_assets/background.png"
+LOCAL_DIR = "../test_assets/map.png"
+BACKGROUND_DIR = "../test_assets/background.png"
 GRID_SIZE = 20
-START, END = (99 * 2, 195 * 2), (165 * 2, 256 * 2)
+START, END = (198, 390), (330,  512)
 START_X, START_Y = START
 
 
@@ -19,8 +19,8 @@ def main():
 
     map.unlock_point_from_coordinates(START_X, START_Y)
     travel = Travel(map, START, END)
-    path_bits = Map.draw_background(
-        map.with_dot(START_X, START_Y, (255, 0, 0, 255), 5).draw_path(
+    path_bits = Map.with_dot(START_X, START_Y, (255, 0, 0, 255), 5).draw_background(
+        map.draw_path(
             travel,
             1.0,
             2,

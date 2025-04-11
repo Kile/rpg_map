@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rpg_map package &mdash; rpg_map 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="rpg_map documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            rpg_map
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">rpg_map package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-rpg_map.rpg_map">rpg_map Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rpg_map.rpg_map.Map"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.draw_background"><code class="docutils literal notranslate"><span class="pre">Map.draw_background()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.draw_path"><code class="docutils literal notranslate"><span class="pre">Map.draw_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.full_image"><code class="docutils literal notranslate"><span class="pre">Map.full_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.get_bits"><code class="docutils literal notranslate"><span class="pre">Map.get_bits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.height"><code class="docutils literal notranslate"><span class="pre">Map.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.masked_image"><code class="docutils literal notranslate"><span class="pre">Map.masked_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.unlock_point_from_coordinates"><code class="docutils literal notranslate"><span class="pre">Map.unlock_point_from_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.unlocked"><code class="docutils literal notranslate"><span class="pre">Map.unlocked</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.width"><code class="docutils literal notranslate"><span class="pre">Map.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.with_dot"><code class="docutils literal notranslate"><span class="pre">Map.with_dot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.with_grid"><code class="docutils literal notranslate"><span class="pre">Map.with_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Map.with_obstacles"><code class="docutils literal notranslate"><span class="pre">Map.with_obstacles()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rpg_map.rpg_map.MapType"><code class="docutils literal notranslate"><span class="pre">MapType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.MapType.Full"><code class="docutils literal notranslate"><span class="pre">MapType.Full</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.MapType.Hidden"><code class="docutils literal notranslate"><span class="pre">MapType.Hidden</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.MapType.Limited"><code class="docutils literal notranslate"><span class="pre">MapType.Limited</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rpg_map.rpg_map.PathDisplayType"><code class="docutils literal notranslate"><span class="pre">PathDisplayType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathDisplayType.AboveMask"><code class="docutils literal notranslate"><span class="pre">PathDisplayType.AboveMask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathDisplayType.BelowMask"><code class="docutils literal notranslate"><span class="pre">PathDisplayType.BelowMask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathDisplayType.Revealing"><code class="docutils literal notranslate"><span class="pre">PathDisplayType.Revealing</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rpg_map.rpg_map.PathPoint"><code class="docutils literal notranslate"><span class="pre">PathPoint</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rpg_map.rpg_map.PathProgressDisplayType"><code class="docutils literal notranslate"><span class="pre">PathProgressDisplayType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathProgressDisplayType.Progress"><code class="docutils literal notranslate"><span class="pre">PathProgressDisplayType.Progress</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathProgressDisplayType.Remaining"><code class="docutils literal notranslate"><span class="pre">PathProgressDisplayType.Remaining</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathProgressDisplayType.Travelled"><code class="docutils literal notranslate"><span class="pre">PathProgressDisplayType.Travelled</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rpg_map.rpg_map.PathStyle"><code class="docutils literal notranslate"><span class="pre">PathStyle</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathStyle.Debug"><code class="docutils literal notranslate"><span class="pre">PathStyle.Debug</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathStyle.Dotted"><code class="docutils literal notranslate"><span class="pre">PathStyle.Dotted</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathStyle.DottedWithOutline"><code class="docutils literal notranslate"><span class="pre">PathStyle.DottedWithOutline</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathStyle.Solid"><code class="docutils literal notranslate"><span class="pre">PathStyle.Solid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.PathStyle.SolidWithOutline"><code class="docutils literal notranslate"><span class="pre">PathStyle.SolidWithOutline</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rpg_map.rpg_map.Travel"><code class="docutils literal notranslate"><span class="pre">Travel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rpg_map.rpg_map.Travel.dbg_map"><code class="docutils literal notranslate"><span class="pre">Travel.dbg_map()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rpg_map</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">rpg_map package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/rpg_map.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rpg-map-package">
+<h1>rpg_map package<a class="headerlink" href="#rpg-map-package" title="Link to this heading"></a></h1>
+<section id="module-rpg_map.rpg_map">
+<span id="rpg-map-module"></span><h2>rpg_map Module<a class="headerlink" href="#module-rpg_map.rpg_map" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rpg_map.rpg_map.</span></span><span class="sig-name descname"><span class="pre">Map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unlocked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">special_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obstacles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.draw_background">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">draw_background</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map.draw_background" title="Link to this definition"></a></dt>
+<dd><p>Draws the background image at every transparent pixel
+if the background is set</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.draw_path">
+<span class="sig-name descname"><span class="pre">draw_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">travel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_display_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map.draw_path" title="Link to this definition"></a></dt>
+<dd><p>Draws a path from a travel struct onto the map with the specified style and percentage of the path drawn.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.full_image">
+<span class="sig-name descname"><span class="pre">full_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map.full_image" title="Link to this definition"></a></dt>
+<dd><p>Returns the full map</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.get_bits">
+<span class="sig-name descname"><span class="pre">get_bits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map.get_bits" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.height">
+<span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#rpg_map.rpg_map.Map.height" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.masked_image">
+<span class="sig-name descname"><span class="pre">masked_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map.masked_image" title="Link to this definition"></a></dt>
+<dd><p>Returns the full map with a mask applied</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.unlock_point_from_coordinates">
+<span class="sig-name descname"><span class="pre">unlock_point_from_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map.unlock_point_from_coordinates" title="Link to this definition"></a></dt>
+<dd><p>Takes in a coordinate, if it is close to an “unlocked” grid point
+it will unlock it and return true, if the point is already unlocked
+it will return false</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.unlocked">
+<span class="sig-name descname"><span class="pre">unlocked</span></span><a class="headerlink" href="#rpg_map.rpg_map.Map.unlocked" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.width">
+<span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#rpg_map.rpg_map.Map.width" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.with_dot">
+<span class="sig-name descname"><span class="pre">with_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map.with_dot" title="Link to this definition"></a></dt>
+<dd><p>Adds a dot do be drawn on the map when full_image or masked_image is called</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.with_grid">
+<span class="sig-name descname"><span class="pre">with_grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map.with_grid" title="Link to this definition"></a></dt>
+<dd><p>Signal you want a grid to be drawn on the map as well</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Map.with_obstacles">
+<span class="sig-name descname"><span class="pre">with_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Map.with_obstacles" title="Link to this definition"></a></dt>
+<dd><p>Signal you want obstacles to be drawn on the map as well</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.MapType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rpg_map.rpg_map.</span></span><span class="sig-name descname"><span class="pre">MapType</span></span><a class="headerlink" href="#rpg_map.rpg_map.MapType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.MapType.Full">
+<span class="sig-name descname"><span class="pre">Full</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">MapType.Full</span></em><a class="headerlink" href="#rpg_map.rpg_map.MapType.Full" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.MapType.Hidden">
+<span class="sig-name descname"><span class="pre">Hidden</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">MapType.Hidden</span></em><a class="headerlink" href="#rpg_map.rpg_map.MapType.Hidden" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.MapType.Limited">
+<span class="sig-name descname"><span class="pre">Limited</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">MapType.Limited</span></em><a class="headerlink" href="#rpg_map.rpg_map.MapType.Limited" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathDisplayType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rpg_map.rpg_map.</span></span><span class="sig-name descname"><span class="pre">PathDisplayType</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathDisplayType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathDisplayType.AboveMask">
+<span class="sig-name descname"><span class="pre">AboveMask</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathDisplayType.AboveMask" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathDisplayType_AboveMask</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathDisplayType.BelowMask">
+<span class="sig-name descname"><span class="pre">BelowMask</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathDisplayType.BelowMask" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathDisplayType_BelowMask</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathDisplayType.Revealing">
+<span class="sig-name descname"><span class="pre">Revealing</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathDisplayType.Revealing" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathDisplayType_Revealing</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathPoint">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rpg_map.rpg_map.</span></span><span class="sig-name descname"><span class="pre">PathPoint</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathPoint" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathProgressDisplayType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rpg_map.rpg_map.</span></span><span class="sig-name descname"><span class="pre">PathProgressDisplayType</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathProgressDisplayType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathProgressDisplayType.Progress">
+<span class="sig-name descname"><span class="pre">Progress</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathProgressDisplayType.Progress" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathProgressDisplayType_Progress</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathProgressDisplayType.Remaining">
+<span class="sig-name descname"><span class="pre">Remaining</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathProgressDisplayType.Remaining" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathProgressDisplayType_Remaining</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathProgressDisplayType.Travelled">
+<span class="sig-name descname"><span class="pre">Travelled</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathProgressDisplayType.Travelled" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathProgressDisplayType_Travelled</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathStyle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rpg_map.rpg_map.</span></span><span class="sig-name descname"><span class="pre">PathStyle</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathStyle" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathStyle.Debug">
+<span class="sig-name descname"><span class="pre">Debug</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathStyle.Debug" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathStyle_Debug</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathStyle.Dotted">
+<span class="sig-name descname"><span class="pre">Dotted</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathStyle.Dotted" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathStyle_Dotted</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathStyle.DottedWithOutline">
+<span class="sig-name descname"><span class="pre">DottedWithOutline</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathStyle.DottedWithOutline" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathStyle_DottedWithOutline</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathStyle.Solid">
+<span class="sig-name descname"><span class="pre">Solid</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathStyle.Solid" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathStyle_Solid</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.PathStyle.SolidWithOutline">
+<span class="sig-name descname"><span class="pre">SolidWithOutline</span></span><a class="headerlink" href="#rpg_map.rpg_map.PathStyle.SolidWithOutline" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PathStyle_SolidWithOutline</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Travel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rpg_map.rpg_map.</span></span><span class="sig-name descname"><span class="pre">Travel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Travel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rpg_map.rpg_map.Travel.dbg_map">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dbg_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rpg_map.rpg_map.Travel.dbg_map" title="Link to this definition"></a></dt>
+<dd><p>Displays the map in a black and white view where white are the
+obstacles and black are the free spaces. This is to debug if
+a fault is with the pathfinding algorithm or the map reduction
+algorithm.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="rpg_map documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Kile.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

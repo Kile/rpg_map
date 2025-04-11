@@ -1,6 +1,8 @@
 use pyo3::prelude::*;
 
 mod structs;
+#[cfg(test)]
+mod tests;
 
 #[pymodule]
 fn rpg_map(m: &Bound<'_, PyModule>) -> PyResult<()> {

@@ -84,6 +84,7 @@ fn calculate_grid_points(width: u32, height: u32, grid_size: u32) -> Vec<(u32, u
 #[pymethods]
 impl Map {
     #[new]
+    #[allow(clippy::too_many_arguments)]
     #[pyo3(signature = (
         bytes,
         width,
@@ -124,7 +125,7 @@ impl Map {
     /// Draws the background image at every transparent pixel
     /// if the background is set
     #[staticmethod]
-    fn draw_background(bytes: Vec<u8>, background: Vec<u8>) -> PyResult<Vec<u8>> {
+    pub fn draw_background(bytes: Vec<u8>, background: Vec<u8>) -> PyResult<Vec<u8>> {
         if background.len() != bytes.len() {
             return Err(pyo3::exceptions::PyValueError::new_err(
                 "Background image must have the same size as the map",
@@ -242,12 +243,10 @@ impl Map {
         }
 
         match display_style {
-            PathDisplayType::BelowMask() | PathDisplayType::Revealing() => {
-                match self.map_type {
-                    MapType::Hidden | MapType::Limited => Ok(self.mask_image(image)),
-                    MapType::Full => Ok(image),
-                }
-            }
+            PathDisplayType::BelowMask() | PathDisplayType::Revealing() => match self.map_type {
+                MapType::Hidden | MapType::Limited => Ok(self.mask_image(image)),
+                MapType::Full => Ok(image),
+            },
             PathDisplayType::AboveMask() => Ok(image),
         }
     }
@@ -719,9 +718,9 @@ impl Map {
             PathProgressDisplayType::Progress() => {
                 // If it is before the critical index, make it greyscale
                 if index < critical_index {
-                    return self.rgba_to_grayscale(&color);
+                    self.rgba_to_grayscale(&color)
                 } else {
-                    return color;
+                    color
                 }
             }
             _ => color,
@@ -729,6 +728,7 @@ impl Map {
     }
 
     /// Draws a point of a path with the specified style
+    #[allow(clippy::too_many_arguments)]
     fn draw_path_point(
         &mut self,
         mut image: Vec<u8>,

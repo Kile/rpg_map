@@ -36,6 +36,15 @@ class PathStyle:
 class Map:
     """
     A class representing a map.
+
+    Attributes
+    ----------
+    width : int
+        The width of the map.
+    height : int
+        The height of the map.
+    unlocked : List[Tuple[int, int]]
+        The points that are unlocked on the map.
     """
 
     width: int

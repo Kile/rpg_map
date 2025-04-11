@@ -95,7 +95,6 @@ pub fn image_to_grid(map: &mut Map) -> Vec<Vec<u8>> {
 
         let polygon = Polygon::new(LineString::from(exterior), vec![]);
         polygons.push(polygon);
-
     }
 
     for y in 0..map.height {
@@ -106,7 +105,6 @@ pub fn image_to_grid(map: &mut Map) -> Vec<Vec<u8>> {
                 }
             }
         }
-        
     }
 
     // Step 3: Buffer edges of obstacles
