@@ -2,7 +2,19 @@ use crate::structs::path::PathPoint;
 use crate::structs::travel::Travel;
 use geo::{Contains, Coord, LineString, Point, Polygon};
 use pyo3::prelude::*;
+use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods, gen_stub_pyclass_enum};
 
+/// The reveal type of the map.
+/// 
+/// Attributes
+/// ---------
+/// Hidden
+///    The map reveals only the last entry in the unlocked points.
+/// Limited
+///    The map reveals all the unlocked points.
+/// Full
+///    The map reveals all the points.
+#[gen_stub_pyclass_enum]
 #[pyclass(eq, eq_int)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum MapType {
@@ -11,16 +23,42 @@ pub enum MapType {
     Full,
 }
 
+/// The style of the path.
+/// 
+/// Attributes
+/// ---------
+/// Debug
+///    The path is drawn in debug mode, only a 1px line is drawn.
+/// Solid 
+///    The path is drawn as a solid line.
+/// Dotted
+///    The path is drawn as a dotted line.
+/// SolidWithOutline 
+///    The path is drawn as a solid line with an outline.
+/// DottedWithOutline
+///    The path is drawn as a dotted line with an outline.
+#[gen_stub_pyclass_enum]
 #[pyclass(eq)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PathStyle {
     Debug(),
-    Dotted([u8; 4]),
     Solid([u8; 4]),
+    Dotted([u8; 4]),
     SolidWithOutline([u8; 4], [u8; 4]),
     DottedWithOutline([u8; 4], [u8; 4]),
 }
 
+/// The type of how to display path progress.
+/// 
+/// Attributes
+/// ---------
+/// Remaining
+///   The path is drawn from the current position to the destination.
+/// Travelled
+///   The path is drawn from the start to the current position.
+/// Progress
+///   The path is drawn from the start to the destination. The path already travelled is converted to greyscale.
+#[gen_stub_pyclass_enum]
 #[pyclass(eq)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PathProgressDisplayType {
@@ -29,6 +67,17 @@ pub enum PathProgressDisplayType {
     Progress(),
 }
 
+/// The way of how to display the path.
+/// 
+/// Attributes
+/// ---------
+/// Revealing
+///   The path is drawn only where the map is unlocked
+/// BelowMask
+///   The path is always drawn below the mask.
+/// AboveMask
+///   The path is always drawn above the mask.
+#[gen_stub_pyclass_enum]
 #[pyclass(eq)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PathDisplayType {
@@ -37,6 +86,38 @@ pub enum PathDisplayType {
     AboveMask(),
 }
 
+/// A class representing a map.
+/// 
+/// Parameters
+/// ----------
+/// bytes : List[int]
+///     The bytes of the image.
+/// width : int
+///     The width of the image.
+/// height : int
+///     The height of the image.
+/// grid_size : int
+///     The size of a single box in the grid defining how many map revealing points the map has.
+///     To see the grid visually, use the `with_grid` method.
+/// map_type : MapType
+///     The type of the map. Can be Hidden, Limited or Full.
+/// unlocked : List[Tuple[int, int]]
+///     The points that are unlocked on the map.
+/// special_points : List[Tuple[int, int]]
+///     The special points on the map. Used to draw the path.
+/// obstacles : List[List[List[Tuple[int, int]]]]
+///     The obstacles on the map. Used to draw the path.
+/// background : Optional[List[int]]
+///
+/// Attributes
+/// ----------
+/// width : int
+///     The width of the map.
+/// height : int
+///     The height of the map.
+/// unlocked : List[Tuple[int, int]]
+///     The points that are unlocked on the map.
+#[gen_stub_pyclass]
 #[pyclass]
 #[derive(Clone)]
 pub struct Map {
@@ -81,6 +162,7 @@ fn calculate_grid_points(width: u32, height: u32, grid_size: u32) -> Vec<(u32, u
     grid_points
 }
 
+#[gen_stub_pymethods]
 #[pymethods]
 impl Map {
     #[new]
@@ -124,6 +206,13 @@ impl Map {
 
     /// Draws the background image at every transparent pixel
     /// if the background is set
+    /// 
+    /// Parameters
+    /// ----------
+    /// bytes : List[int]
+    ///     The bytes of the image.
+    /// background : Optional[List[int]]
+    ///     The bytes of the background of the image.
     #[staticmethod]
     pub fn draw_background(bytes: Vec<u8>, background: Vec<u8>) -> PyResult<Vec<u8>> {
         if background.len() != bytes.len() {
@@ -142,7 +231,24 @@ impl Map {
         Ok(bytes_clone)
     }
 
-    /// Adds a dot do be drawn on the map when full_image or masked_image is called
+    /// Adds a dot do be drawn on the map when :func:`Map.full_image`, :func:`Map.masked_image` or :func:`Map.get_bits` is called
+    /// 
+    /// Parameters
+    /// ----------
+    /// x : int
+    ///     The x coordinate of the dot.
+    /// y : int
+    ///     The y coordinate of the dot.
+    /// color : Tuple[int, int, int, int]
+    ///     The color of the dot.
+    /// radius : int
+    ///     The radius of the dot.
+    ///
+    /// Returns
+    /// -------
+    /// Map
+    ///     The map with the dot.
+    /// 
     pub fn with_dot(
         mut slf: PyRefMut<'_, Self>,
         x: u32,
@@ -154,21 +260,31 @@ impl Map {
         slf
     }
 
-    /// Signal you want a grid to be drawn on the map as well
+    /// If called, a grid is drawn on the map when :func:`Map.full_image`, :func:`Map.masked_image` or :func:`Map.get_bits` is called
     pub fn with_grid(mut slf: PyRefMut<'_, Self>) -> PyRefMut<'_, Self> {
         slf.should_draw_with_grid = true;
         slf
     }
 
-    /// Signal you want obstacles to be drawn on the map as well
+    /// If called, the obstacles are drawn on the map when :func:`Map.full_image`, :func:`Map.masked_image` or :func:`Map.get_bits` is called
     pub fn with_obstacles(mut slf: PyRefMut<'_, Self>) -> PyRefMut<'_, Self> {
         slf.draw_obstacles = true;
         slf
     }
 
-    /// Takes in a coordinate, if it is close to an "unlocked" grid point
-    /// it will unlock it and return true, if the point is already unlocked
-    /// it will return false
+    /// Takes in a coordinate, if it is close to an "unlocked" grid point it will unlock it and return true, if the point is already unlocked it will return false
+    /// 
+    /// Parameters
+    /// ----------
+    /// x : int
+    ///     The x coordinate of the point to unlock.
+    /// y : int
+    ///     The y coordinate of the point to unlock.
+    /// 
+    /// Returns
+    /// -------
+    /// bool
+    ///     True if the point was unlocked, False otherwise (already unlocked).
     pub fn unlock_point_from_coordinates(&mut self, x: u32, y: u32) -> bool {
         let point = self.closest_to_point((x, y));
         if self.unlocked.contains(&point) {
@@ -182,7 +298,25 @@ impl Map {
         true
     }
 
-    /// Draws a path from a travel struct onto the map with the specified style and percentage of the path drawn.
+    /// Draws the path from :func:`Travel.computed_path`` on the image.
+    /// 
+    /// Parameters
+    /// ----------
+    /// travel : Travel
+    ///     The travel object containing the path to draw.
+    /// percentage : float
+    ///     The percentage of the path to draw. 0.0 to 1.0.
+    /// line_width : int
+    ///     The width of the line to draw in pixels. Note that if the line has an outline the width will be this +2px
+    /// path_type : PathStyle
+    ///     The type of path to draw. Can be Solid, Dotted, SolidWithOutline or DottedWithOutline.
+    /// path_display : PathDisplayType
+    ///     The type of path display to use. Can be Revealing, BelowMask or AboveMask.
+    /// 
+    /// Returns
+    /// -------
+    /// List[int]
+    ///     The bytes of the image with the path drawn.
     #[pyo3(signature = (
         travel,
         percentage,
@@ -211,7 +345,7 @@ impl Map {
             PathProgressDisplayType::Progress() => path,
         };
         // Unlock the points traversed so far
-        if display_style == PathDisplayType::Revealing() {
+        if display_style != PathDisplayType::BelowMask() {
             travel.computed_path[..=critical_index]
                 .iter()
                 .for_each(|point| {
@@ -251,7 +385,12 @@ impl Map {
         }
     }
 
-    /// Returns the full map
+    /// Returns the full image. If specified, draws the grid, obstacles, and dots.
+    /// 
+    /// Returns
+    /// -------
+    /// List[int]
+    ///    The bytes of the image with the grid, obstacles, and dots drawn.
     fn full_image(&mut self) -> Vec<u8> {
         let mut new_bytes = self.bytes.clone();
         new_bytes = self.draw_obstacles(new_bytes);
@@ -260,7 +399,12 @@ impl Map {
         new_bytes
     }
 
-    /// Returns the full map with a mask applied
+    /// Returns the masked image. If specified, draws the grid, obstacles, and dots.
+    /// 
+    /// Returns
+    /// -------
+    /// List[int]
+    ///   The bytes of the image with the grid, obstacles, and dots drawn.
     fn masked_image(&mut self) -> Vec<u8> {
         let mask = self.create_mask();
         let mut image = self.bytes.clone();
@@ -271,6 +415,13 @@ impl Map {
         image
     }
 
+    /// The main method to get the image bytes.
+    /// Respects the map type and draws the grid, obstacles, and dots if specified.
+    /// 
+    /// Returns
+    /// -------
+    /// List[int]
+    ///   The bytes of the image with the grid, obstacles, and dots drawn.
     pub fn get_bits(&mut self) -> Vec<u8> {
         match self.map_type {
             MapType::Full => self.full_image(),

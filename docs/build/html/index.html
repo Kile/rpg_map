@@ -72,13 +72,87 @@
              
   <section id="rpg-map-documentation">
 <h1>rpg_map documentation<a class="headerlink" href="#rpg-map-documentation" title="Link to this heading"></a></h1>
-<p>The rpg_map package provides a set of tools for creating and manipulating images of maps. This library is specifically designed for:</p>
+<a class="reference external image-reference" href="https://pypi.org/project/rpg_map/"><img alt="PyPI version" src="https://img.shields.io/pypi/v/rpg_map.svg" />
+</a>
+<a class="reference external image-reference" href="https://rpg-map.readthedocs.io/en/latest/"><img alt="Documentation Status" src="https://readthedocs.org/projects/rpg-map/badge/?version=latest" />
+</a>
+<p>A fast, zero-dependency Python library for visualizing exploration and movement across large pixel-based maps. Built in Rust for speed and efficiency, <code class="docutils literal notranslate"><span class="pre">rpg_map</span></code> is perfect for turn-based or real-time RPGs, strategy games, and D&amp;D-style map reveals.</p>
 <ul class="simple">
-<li><p>Larger maps (in terms of pixel size)</p></li>
-<li><p>Travel paths from point A to point B on a maps</p></li>
-<li><p>Speed (written in Rust)</p></li>
-<li><p>Easy to use (Python interface)</p></li>
-<li><p>Zero dependencies (no external libraries required, works on raw bytes)</p></li>
+<li><p>Hides unexplored areas of the map</p></li>
+<li><p>Reveals areas as they’re explored or passed through</p></li>
+<li><p>Draws travel paths using A* pathfinding</p></li>
+<li><p>Fast and lightweight with zero Python dependencies</p></li>
+<li><p>Operates directly on pixel data</p></li>
+<li><p>Customizable visual styles and highlight zones</p></li>
+<li><p>Includes examples using static image processing and Pygame</p></li>
+</ul>
+<p>Install via pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>rpg-map
+</pre></div>
+</div>
+<p>Full documentation and examples available at: <a class="reference external" href="https://rpg-map.readthedocs.io/">https://rpg-map.readthedocs.io/</a></p>
+<p>The library uses step-by-step image processing to reveal and annotate the map. Here’s an overview of the process:</p>
+<ol class="arabic">
+<li><p><strong>Draw Obstacles</strong>  
+The <code class="docutils literal notranslate"><span class="pre">Map</span></code> class accepts an <code class="docutils literal notranslate"><span class="pre">obstacles</span></code> parameter which allows you to define N-sided polygons. These are rendered onto the map as solid barriers.</p>
+<a class="reference internal image-reference" href="_static/demos/1.png"><img alt="_static/demos/1.png" src="_static/demos/1.png" style="width: 600px;" />
+</a>
+</li>
+<li><p><strong>Add Padding and Convert to Pathfinding Grid</strong>  
+Obstacles and map edges are padded and the image is converted into a binary map (1 = path, 0 = obstacle) for pathfinding.</p>
+<a class="reference internal image-reference" href="_static/demos/2.png"><img alt="_static/demos/2.png" src="_static/demos/2.png" style="width: 600px;" />
+</a>
+</li>
+<li><p><strong>Pathfinding with A*</strong>  
+The library uses the A* algorithm to find the shortest path from point A to point B. The path is drawn on the map using a customizable style.</p>
+<a class="reference internal image-reference" href="_static/demos/3.png"><img alt="_static/demos/3.png" src="_static/demos/3.png" style="width: 600px;" />
+</a>
+</li>
+<li><p><strong>Draw Dots</strong>  
+Optional dots can be placed on the map (e.g., for points of interest, the player, markers).</p>
+<a class="reference internal image-reference" href="_static/demos/4.png"><img alt="_static/demos/4.png" src="_static/demos/4.png" style="width: 600px;" />
+</a>
+</li>
+<li><p><strong>Divide into Grid Squares</strong>  
+The image is divided into equal squares based on the <cite>grid_size</cite> parameter.</p>
+<a class="reference internal image-reference" href="_static/demos/5.png"><img alt="_static/demos/5.png" src="_static/demos/5.png" style="width: 600px;" />
+</a>
+</li>
+<li><p><strong>Reveal Explored Areas</strong>  
+A mask overlays the map. Areas near the travel path or manually unlocked via <code class="docutils literal notranslate"><span class="pre">Map.unlock_point</span></code> are revealed in circular zones.</p>
+<a class="reference internal image-reference" href="_static/demos/6.png"><img alt="_static/demos/6.png" src="_static/demos/6.png" style="width: 600px;" />
+</a>
+</li>
+<li><p><strong>Fill Transparent Areas</strong>  
+Any remaining transparent pixels are filled with a background layer.</p>
+<a class="reference internal image-reference" href="_static/demos/7.png"><img alt="_static/demos/7.png" src="_static/demos/7.png" style="width: 600px;" />
+</a>
+</li>
+<li><p><strong>Final Map Output</strong>  
+The completed map shows explored areas, paths, markers, and hidden regions yet to be discovered.</p>
+<a class="reference internal image-reference" href="_static/demos/8.png"><img alt="_static/demos/8.png" src="_static/demos/8.png" style="width: 600px;" />
+</a>
+</li>
+</ol>
+<ul>
+<li><p>You can define <strong>special grid points</strong> where the reveal radius is larger — perfect for cities or key landmarks.</p></li>
+<li><p>The library supports <strong>tons of styles</strong> for different themes and usecases.</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_static/demos/9.png"><img alt="_static/demos/9.png" src="_static/demos/9.png" style="width: 300px;" />
+</a>
+<a class="reference internal image-reference" href="_static/demos/10.png"><img alt="_static/demos/10.png" src="_static/demos/10.png" style="width: 300px;" />
+</a>
+<a class="reference internal image-reference" href="_static/demos/11.png"><img alt="_static/demos/11.png" src="_static/demos/11.png" style="width: 300px;" />
+</a>
+<a class="reference internal image-reference" href="_static/demos/12.png"><img alt="_static/demos/12.png" src="_static/demos/12.png" style="width: 300px;" />
+</a>
+</div></blockquote>
+</li>
+</ul>
+<p>Check out these demos:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test/static_poc.py</span></code> – Generate one image from your code</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test/pygame_poc</span></code> – Interactively do pathfinding to wherever you click</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>

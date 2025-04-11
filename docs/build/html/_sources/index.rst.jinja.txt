@@ -3,12 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-rpg_map documentation
-=================================================
-
-.. processed_readme:: ../README.rst
+.. |readme_content| literalinclude:: ../../README.rst
    :end-before: Contributing & Development
-   :replace: demos/=_static/demos/
+
+{{ readme_content|replace('demos/', '_static/demos/') }}
 
 .. toctree::
    :maxdepth: 2

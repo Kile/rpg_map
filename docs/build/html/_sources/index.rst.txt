@@ -4,19 +4,11 @@
    contain the root `toctree` directive.
 
 rpg_map documentation
-=====================
+=================================================
 
-The rpg_map package provides a set of tools for creating and manipulating images of maps. This library is specifically designed for:
-
-* Larger maps (in terms of pixel size) 
-
-* Travel paths from point A to point B on a maps 
-
-* Speed (written in Rust) 
-
-* Easy to use (Python interface) 
-
-* Zero dependencies (no external libraries required, works on raw bytes) 
+.. processed_readme:: ../README.rst
+   :end-before: Contributing & Development
+   :replace: demos/=_static/demos/
 
 .. toctree::
    :maxdepth: 2

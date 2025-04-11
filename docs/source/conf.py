@@ -1,7 +1,7 @@
-import rpg_map
 # -- Path setup --------------------------------------------------------------
-
-# sys.path.insert(0, os.path.abspath('..'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('./_ext')) # If your _ext directory is in docs/source/
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -25,6 +25,7 @@ extensions = [
     'sphinx.ext.intersphinx', # To link to other projects' documentation
     'sphinx.ext.viewcode',  # To include links to the source code
     'sphinx_rtd_theme',     # To use the Read the Docs theme
+    "process_readme", # Custom extension to process README files
 ]
 
 templates_path = ['_templates']

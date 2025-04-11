@@ -4,8 +4,8 @@ from rpg_map import Map, MapType, Travel, PathStyle, PathDisplayType, PathProgre
 
 # Constants
 TILE_SIZE = 1
-LOCAL_DIR = "test_assets/map.png"  # Replace with the path to your image
-BACKGROUND_DIR = "test_assets/background.png"  # Replace with the path to your background image
+LOCAL_DIR = "../test_assets/map.png"  # Replace with the path to your image
+BACKGROUND_DIR = "../test_assets/background.png"  # Replace with the path to your background image
 
 # Load image and create map
 image = Image.open(LOCAL_DIR).convert("RGBA")

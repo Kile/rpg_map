@@ -1,4 +1,4 @@
-from rpg_map import Travel, Map, MapType, PathStyle
+from rpg_map import Travel, Map, MapType, PathStyle, PathProgressDisplayType
 from PIL import Image
 
 LOCAL_DIR = "../test_assets/map.png"
@@ -15,12 +15,19 @@ def main():
     background = Image.open(BACKGROUND_DIR).convert("RGBA")
     # get background bytes
     background_bytes = list(background.tobytes())
-    map = Map(image_bytes, image.size[0], image.size[1], GRID_SIZE, MapType.Limited)
+    map = Map(
+        image_bytes,
+        image.size[0],
+        image.size[1],
+        GRID_SIZE,
+        MapType.Limited,
+        obstacles=[[(160, 240), (134, 253), (234, 257), (208, 239)]],
+    )
 
     map.unlock_point_from_coordinates(START_X, START_Y)
     travel = Travel(map, START, END)
-    path_bits = Map.with_dot(START_X, START_Y, (255, 0, 0, 255), 5).draw_background(
-        map.draw_path(
+    path_bits = Map.draw_background(
+        map.with_dot(START_X, START_Y, (255, 0, 0, 255), 5).draw_path(
             travel,
             1.0,
             2,

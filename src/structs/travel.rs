@@ -2,10 +2,31 @@ use crate::structs::path::{astar, PathPoint};
 use core::panic;
 use pyo3::prelude::*;
 use std::vec;
+use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 use crate::structs::map::Map;
 use geo::{Contains, Coord, LineString, Point, Polygon};
 
+/// A class representing a travel from one point to another on a map.
+/// This class contains the shortest path from point A to point B on the map.
+/// It uses the A* algorithm to find the path.
+/// 
+/// Parameters
+/// ----------
+/// map : Map
+///    The map to travel on.
+/// current_location : tuple[int, int]
+///    The current location of the traveler. Given as a tuple of (x, y) coordinates.
+/// destination : tuple[int, int]
+///    The destination of the traveler. Given as a tuple of (x, y) coordinates.
+///     
+/// Attributes
+/// ---------
+/// map : Map
+///    The map to travel on.
+/// computed_path : list[PathPoint]
+///    The computed path from the current location to the destination.
+#[gen_stub_pyclass]
 #[pyclass]
 #[derive(Clone)]
 pub struct Travel {
@@ -113,6 +134,7 @@ pub fn image_to_grid(map: &mut Map) -> Vec<Vec<u8>> {
     grid
 }
 
+#[gen_stub_pymethods]
 #[pymethods]
 impl Travel {
     #[new]
@@ -143,6 +165,16 @@ impl Travel {
     /// obstacles and black are the free spaces. This is to debug if
     /// a fault is with the pathfinding algorithm or the map reduction
     /// algorithm.
+    /// 
+    /// Parameters
+    /// ---------
+    /// map : Map
+    ///   The map to display the black and white view of.
+    ///
+    /// Returns
+    /// -------
+    /// list[int]
+    ///   A list of bytes representing the black and white view of the map.
     #[staticmethod]
     pub fn dbg_map(mut map: Map) -> Vec<u8> {
         let grid = image_to_grid(&mut map);
