@@ -1,10 +1,10 @@
 rpg\_map package
 ================
 
-rpg\_map Module
-------------------------
+Module contents
+---------------
 
-.. automodule:: rpg_map.rpg_map
+.. automodule:: rpg_map
    :members:
    :show-inheritance:
    :undoc-members:
