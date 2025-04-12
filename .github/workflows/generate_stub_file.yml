@@ -1,4 +1,4 @@
-name: Generate stub_gen
+name: Generate stub file
 
 on:
     workflow_run:
@@ -30,9 +30,9 @@ jobs:
             git config --local user.email "actions@github.com"
             git add rpg_map.pyi
             git commit -m "Update rpg_map.pyi"
-            echo "name=changed::true" >> $GITHUB_OUTPUT
+            echo "name=changed::true" >> $GITHUB_STATE
           else
-            echo "name=changed::false" >> $GITHUB_OUTPUT
+            echo "name=changed::false" >> $GITHUB_STATE
           fi
       - name: Push changes
         if: steps.check_changes.outputs.changed == 'true'
