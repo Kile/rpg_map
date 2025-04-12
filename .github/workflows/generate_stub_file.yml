@@ -30,13 +30,13 @@ jobs:
             git config --local user.email "actions@github.com"
             git add rpg_map.pyi
             git commit -m "Update rpg_map.pyi"
-            echo "::set-output name=changed::true"
+            echo "name=changed::true" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=changed::false"
+            echo "name=changed::false" >> $GITHUB_OUTPUT
           fi
       - name: Push changes
         if: steps.check_changes.outputs.changed == 'true'
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ github.token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}

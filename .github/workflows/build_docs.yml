@@ -35,7 +35,7 @@ jobs:
       - name: Check for changes and commit
         id: changes
         run: |
-          cd docs/_build/html
+          cd docs/build/html
           # Check if there are any changes in the generated documentation
           if [[ -n $(git status --porcelain) ]]; then
             echo "::warning title=Documentation Changes::Documentation changes detected!"
@@ -43,9 +43,9 @@ jobs:
             git config --local user.email "actions@github.com"
             git add .
             git commit -m "Update documentation"
-            echo "::set-output name=changed::true" # set changed to true
+            echo "name=changed::true" >> $GITHUB_OUTPUT # set changed to true
           else
-            echo "::set-output name=changed::false" # set changed to false
+            echo "name=changed::false" >> $GITHUB_OUTPUT # set changed to false
             echo "No changes in documentation."
           fi
 
