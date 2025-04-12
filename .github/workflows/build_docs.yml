@@ -44,9 +44,9 @@ jobs:
             git config --local user.email "actions@github.com"
             git add .
             git commit -m "Update documentation"
-            echo "name=changed::true" >> $GITHUB_OUTPUT # set changed to true
+            echo "changed=true" >> $GITHUB_OUTPUT # set changed to true
           else
-            echo "name=changed::false" >> $GITHUB_OUTPUT # set changed to false
+            echo "changed=false" >> $GITHUB_OUTPUT # set changed to false
             echo "No changes in documentation."
           fi
           echo "Documentation changes detected: ${{ steps.changes.outputs.changed }}"
