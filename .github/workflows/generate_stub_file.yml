@@ -24,8 +24,7 @@ jobs:
       - name: Check for changes and commit
         id: check_changes
         run: |
-          git diff --exit-code --quiet rpg_map.pyi
-          if [ $? -ne 0 ]; then
+          if [[ -n $(git status --porcelain) ]]; then
             echo "::warning title=Changes Detected::Changes detected in rpg_map.pyi"
             git config --local user.name "GitHub Actions"
             git config --local user.email "actions@github.com"
