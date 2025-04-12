@@ -1,3 +1,5 @@
+# docs/source/_ext/process_readme.py
+import os
 from docutils.parsers.rst import Directive
 from docutils.statemachine import StringList
 from docutils import nodes
@@ -16,11 +18,17 @@ class ProcessedReadme(Directive):
                 key, value = item.split('=', 1)
                 replacement_dict[key.strip()] = value.strip()
 
+        on_rtd = os.environ.get('READTHEDOCS') == 'True'
+        if on_rtd:
+            resolved_filename = '../../' + filename
+        else:
+            resolved_filename = '../' + filename # Adjust local path as needed
+
         try:
-            with open(filename, 'r') as f:
+            with open(resolved_filename, 'r') as f:
                 content = f.read()
         except FileNotFoundError:
-            return [self.reporter.error(f'File not found: {filename}')]
+            return [self.reporter.error(f'File not found: {resolved_filename}')]
 
         if end_before:
             content = content.split(end_before)[0].strip()
