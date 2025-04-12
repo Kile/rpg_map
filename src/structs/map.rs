@@ -462,8 +462,8 @@ impl Map {
         Ok(())
     }
 
-    /// Checks if a point is a background obstracle based on either if it is
-    /// transparent or if the coordinate is the same as the background at that point
+    // Checks if a point is a background obstracle based on either if it is
+    // transparent or if the coordinate is the same as the background at that point
     // fn is_boarder_point(
     //     &self,
     //     x: u32,

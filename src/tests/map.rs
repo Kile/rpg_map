@@ -105,7 +105,7 @@ mod map_tests {
                 .zip(expected.iter())
                 .filter(|(a, b)| a != b)
                 .collect::<Vec<_>>();
-            if difference.len() > 0 {
+            if !difference.is_empty() {
                 // Save both images to the logs folder for debugging
                 log_image_difference(
                     &result,
