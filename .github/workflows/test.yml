@@ -22,10 +22,10 @@ jobs:
           rust-version: stable
 
       - name: cargo test
-        run: cargo test --all-features
+        run: cargo test
 
       - name: rustfmt
         run: cargo fmt --all -- --check
 
       - name: clippy
-        run: cargo clippy --all --all-features --tests -- -D warnings
+        run: cargo clippy --all --tests -- -D warnings

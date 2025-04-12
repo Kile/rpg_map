@@ -1,6 +1,6 @@
 #[cfg(test)]
 extern crate image;
-use pyo3::prelude::{Py, PyRefMut, Python, PyErr};
+use pyo3::prelude::{Py, PyErr, PyRefMut, Python};
 
 fn get_image_bits(directory: &str, filename: &str) -> (Vec<u8>, u32, u32) {
     let path = format!("{}/{}", directory, filename);
@@ -61,7 +61,7 @@ mod map_tests {
         let (image, image_width, image_height) = get_image_bits("test_assets", "map.png");
         let (background, _, _) = get_image_bits("test_assets", "background.png");
         let (expected, _, _) = get_image_bits("test_results", "image.png");
-        let mut map = Map::new(
+        let map = Map::new(
             image.clone(),
             image_width,
             image_height,
