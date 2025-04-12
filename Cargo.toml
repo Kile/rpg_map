@@ -11,7 +11,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 pyo3 = "0.23.3"
 geo = "0.29.3"
-pyo3-stub-gen = "0.7.0"
+pyo3-stub-gen = "0.8.0"
 
 [dev-dependencies]
 image = "0.25.6"
