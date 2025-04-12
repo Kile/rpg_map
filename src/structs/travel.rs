@@ -1,8 +1,8 @@
 use crate::structs::path::{astar, PathPoint};
 use core::panic;
 use pyo3::prelude::*;
-use std::vec;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
+use std::vec;
 
 use crate::structs::map::Map;
 use geo::{Contains, Coord, LineString, Point, Polygon};
@@ -10,7 +10,7 @@ use geo::{Contains, Coord, LineString, Point, Polygon};
 /// A class representing a travel from one point to another on a map.
 /// This class contains the shortest path from point A to point B on the map.
 /// It uses the A* algorithm to find the path.
-/// 
+///
 /// Parameters
 /// ----------
 /// map : Map
@@ -165,7 +165,7 @@ impl Travel {
     /// obstacles and black are the free spaces. This is to debug if
     /// a fault is with the pathfinding algorithm or the map reduction
     /// algorithm.
-    /// 
+    ///
     /// Parameters
     /// ---------
     /// map : Map

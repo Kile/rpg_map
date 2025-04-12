@@ -2,10 +2,10 @@ use crate::structs::path::PathPoint;
 use crate::structs::travel::Travel;
 use geo::{Contains, Coord, LineString, Point, Polygon};
 use pyo3::prelude::*;
-use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods, gen_stub_pyclass_enum};
+use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pyclass_enum, gen_stub_pymethods};
 
 /// The reveal type of the map.
-/// 
+///
 /// Attributes
 /// ---------
 /// Hidden
@@ -24,16 +24,16 @@ pub enum MapType {
 }
 
 /// The style of the path.
-/// 
+///
 /// Attributes
 /// ---------
 /// Debug
 ///    The path is drawn in debug mode, only a 1px line is drawn.
-/// Solid 
+/// Solid
 ///    The path is drawn as a solid line.
 /// Dotted
 ///    The path is drawn as a dotted line.
-/// SolidWithOutline 
+/// SolidWithOutline
 ///    The path is drawn as a solid line with an outline.
 /// DottedWithOutline
 ///    The path is drawn as a dotted line with an outline.
@@ -49,7 +49,7 @@ pub enum PathStyle {
 }
 
 /// The type of how to display path progress.
-/// 
+///
 /// Attributes
 /// ---------
 /// Remaining
@@ -68,7 +68,7 @@ pub enum PathProgressDisplayType {
 }
 
 /// The way of how to display the path.
-/// 
+///
 /// Attributes
 /// ---------
 /// Revealing
@@ -87,7 +87,7 @@ pub enum PathDisplayType {
 }
 
 /// A class representing a map.
-/// 
+///
 /// Parameters
 /// ----------
 /// bytes : List[int]
@@ -206,7 +206,7 @@ impl Map {
 
     /// Draws the background image at every transparent pixel
     /// if the background is set
-    /// 
+    ///
     /// Parameters
     /// ----------
     /// bytes : List[int]
@@ -232,7 +232,7 @@ impl Map {
     }
 
     /// Adds a dot do be drawn on the map when :func:`Map.full_image`, :func:`Map.masked_image` or :func:`Map.get_bits` is called
-    /// 
+    ///
     /// Parameters
     /// ----------
     /// x : int
@@ -248,7 +248,7 @@ impl Map {
     /// -------
     /// Map
     ///     The map with the dot.
-    /// 
+    ///
     pub fn with_dot(
         mut slf: PyRefMut<'_, Self>,
         x: u32,
@@ -273,14 +273,14 @@ impl Map {
     }
 
     /// Takes in a coordinate, if it is close to an "unlocked" grid point it will unlock it and return true, if the point is already unlocked it will return false
-    /// 
+    ///
     /// Parameters
     /// ----------
     /// x : int
     ///     The x coordinate of the point to unlock.
     /// y : int
     ///     The y coordinate of the point to unlock.
-    /// 
+    ///
     /// Returns
     /// -------
     /// bool
@@ -299,7 +299,7 @@ impl Map {
     }
 
     /// Draws the path from :func:`Travel.computed_path`` on the image.
-    /// 
+    ///
     /// Parameters
     /// ----------
     /// travel : Travel
@@ -312,7 +312,7 @@ impl Map {
     ///     The type of path to draw. Can be Solid, Dotted, SolidWithOutline or DottedWithOutline.
     /// path_display : PathDisplayType
     ///     The type of path display to use. Can be Revealing, BelowMask or AboveMask.
-    /// 
+    ///
     /// Returns
     /// -------
     /// List[int]
@@ -386,7 +386,7 @@ impl Map {
     }
 
     /// Returns the full image. If specified, draws the grid, obstacles, and dots.
-    /// 
+    ///
     /// Returns
     /// -------
     /// List[int]
@@ -400,7 +400,7 @@ impl Map {
     }
 
     /// Returns the masked image. If specified, draws the grid, obstacles, and dots.
-    /// 
+    ///
     /// Returns
     /// -------
     /// List[int]
@@ -417,7 +417,7 @@ impl Map {
 
     /// The main method to get the image bytes.
     /// Respects the map type and draws the grid, obstacles, and dots if specified.
-    /// 
+    ///
     /// Returns
     /// -------
     /// List[int]

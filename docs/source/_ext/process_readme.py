@@ -1,8 +1,6 @@
-# docs/source/_ext/process_readme.py
 import os
 from docutils.parsers.rst import Directive
-from docutils.statemachine import StringList
-from docutils import nodes
+from docutils.core import publish_doctree
 
 class ProcessedReadme(Directive):
     required_arguments = 1
@@ -27,7 +25,7 @@ class ProcessedReadme(Directive):
         try:
             with open(resolved_filename, 'r') as f:
                 content = f.read()
-        except FileNotFoundError:
+        except FileNotFoundError as e:
             return [self.reporter.error(f'File not found: {resolved_filename}')]
 
         if end_before:
@@ -36,10 +34,11 @@ class ProcessedReadme(Directive):
         for old, new in replacement_dict.items():
             content = content.replace(old, new)
 
-        lines = StringList(content.splitlines())
-        node = nodes.section()  # Or a more appropriate container node
-        self.state.nested_parse(lines, 0, node)
-        return node.children
+        # Parse the modified content into a document tree
+        document = publish_doctree(content, settings_overrides={'output_encoding': 'unicode'})
+
+        # Directly return the children of the parsed document
+        return list(document.children)
 
 def setup(app):
     app.add_directive('processed_readme', ProcessedReadme)

@@ -6,14 +6,15 @@
 name: CI
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Run Tests"]
+    types: 
+      - completed
     branches:
-      - main
       - master
+  push:
     tags:
       - '*'
-  pull_request:
-  workflow_dispatch:
 
 permissions:
   contents: read

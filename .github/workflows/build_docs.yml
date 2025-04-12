@@ -1,0 +1,75 @@
+name: Build and Deploy Documentation
+
+on:
+  workflow_run:
+    workflows: ["Run Tests"]
+    types: 
+      - completed
+
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    if : ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        # Fetch all history so we can compute changes later
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Install Dependencies and Build Docs
+        run: |
+          python3 -m venv env
+          source env/bin/activate
+          cd docs
+          pip3 install -r requirements.txt
+          sphinx-apidoc -o source/ ../ -f  # Generate API docs
+          make html
+
+      - name: Check for changes and commit
+        id: changes
+        run: |
+          cd docs/_build/html
+          # Check if there are any changes in the generated documentation
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "::warning title=Documentation Changes::Documentation changes detected!"
+            git config --local user.name "GitHub Actions"
+            git config --local user.email "actions@github.com"
+            git add .
+            git commit -m "Update documentation"
+            echo "::set-output name=changed::true" # set changed to true
+          else
+            echo "::set-output name=changed::false" # set changed to false
+            echo "No changes in documentation."
+          fi
+
+      - name: Push changes
+        if: steps.changes.outputs.changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}
+          branch: ${{ github.ref }} # Push to the same branch
+
+      - name: Upload Documentation Artifact (for PRs)
+        if: github.event_name == 'pull_request' && steps.changes.outputs.changed == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs-preview
+          path: docs/_build/html/
+          retention-days: 7
+
+      - name: Create PR Comment (for PRs)
+        if: github.event_name == 'pull_request' && steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Documentation changes detected.  You can preview the changes by downloading the `docs-preview` artifact from this run.
+            Alternatively, you can view the changes after this PR is merged.
+          token: ${{ secrets.GITHUB_TOKEN }}
