@@ -44,11 +44,12 @@ jobs:
             git config --local user.email "actions@github.com"
             git add .
             git commit -m "Update documentation"
-            echo "name=changed::true" >> $GITHUB_STATE # set changed to true
+            echo "name=changed::true" >> $GITHUB_OUTPUT # set changed to true
           else
-            echo "name=changed::false" >> $GITHUB_STATE # set changed to false
+            echo "name=changed::false" >> $GITHUB_OUTPUT # set changed to false
             echo "No changes in documentation."
           fi
+          echo "Documentation changes detected: ${{ steps.changes.outputs.changed }}"
 
       - name: Push changes
         if: steps.changes.outputs.changed == 'true'
