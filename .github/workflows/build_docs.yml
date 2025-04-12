@@ -37,7 +37,6 @@ jobs:
       - name: Check for changes and commit
         id: changes
         run: |
-          git pull origin ${{ github.ref }} # Pull the latest changes
           cd docs/build/html
           # Check if there are any changes in the generated documentation
           if [[ -n $(git status --porcelain) ]]; then
