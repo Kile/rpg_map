@@ -10,6 +10,8 @@ jobs:
   run_stub_gen:
     name: Run stub_gen
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+        contents: write # Required to push changes to the repository
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -34,7 +36,6 @@ jobs:
           else
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
-          echo "Changes detected: ${{ steps.check_changes.outputs.changed }}"
 
       - name: Push changes
         if: steps.check_changes.outputs.changed == 'true'

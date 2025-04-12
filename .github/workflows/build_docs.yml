@@ -11,6 +11,8 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     if : ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write # Required to push changes to the repository
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -49,7 +51,6 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT # set changed to false
             echo "No changes in documentation."
           fi
-          echo "Documentation changes detected: ${{ steps.changes.outputs.changed }}"
 
       - name: Push changes
         if: steps.changes.outputs.changed == 'true'
