@@ -66,7 +66,7 @@ The library uses step-by-step image processing to reveal and annotate the map. H
       :width: 600
 
 5. **Divide into Grid Squares**  
-   The image is divided into equal squares based on the `grid_size` parameter.
+   The image is divided into equal squares based on the ``grid_size`` parameter.
 
    .. image:: demos/5.png
       :width: 600
@@ -109,8 +109,8 @@ Examples
 
 Check out these demos:
 
-- ``test/static_poc.py`` – Generate one image from your code
-- ``test/pygame_poc`` – Interactively do pathfinding to wherever you click
+- ``examples/static_poc.py`` – Generate one image from your code
+- ``examples/pygame_poc`` – Interactively do pathfinding to wherever you click
 
 
 Contributing & Development
@@ -129,13 +129,13 @@ Set Up the Development Environment
 
       maturin develop --features "extension-module"
 
-2. **Generate Python Typings (`.pyi`)**
+2. **Generate Python Typings (``.pyi``)**
 
    The library includes a binary that auto-generates Python type stubs. Run it with:
 
    .. code:: bash
 
-      cargo run --bin stub_gen
+      cargo run --bin stub_gen --features stubgen
 
 3. **Build the Documentation**
 

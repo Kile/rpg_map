@@ -1,4 +1,5 @@
 use pyo3::prelude::*;
+#[cfg(feature = "stubgen")]
 use pyo3_stub_gen::define_stub_info_gatherer;
 
 mod structs;
@@ -18,4 +19,5 @@ fn rpg_map(m: &Bound<'_, PyModule>) -> PyResult<()> {
     Ok(())
 }
 
+#[cfg(feature = "stubgen")]
 define_stub_info_gatherer!(stub_info);

@@ -36,7 +36,21 @@ fn log_image_difference(
     for (x, y, pixel) in diff_image.enumerate_pixels_mut() {
         let index = (y * image_width + x) as usize * 4;
         if result[index] != expected[index] {
-            *pixel = image::Rgba([255u8, 0u8, 0u8, 255u8]); // Red for differences
+            // Log the difference
+            // println!(
+            //     "Difference at pixel ({}, {}): result: {:?}, expected: {:?}",
+            //     x,
+            //     y,
+            //     &result[index..index + 4],
+            //     &expected[index..index + 4]
+            // );
+            // set the pixel color to abs(expected - result)
+            *pixel = image::Rgba([
+                (result[index] as i32 - expected[index] as i32).abs() as u8,
+                (result[index + 1] as i32 - expected[index + 1] as i32).abs() as u8,
+                (result[index + 2] as i32 - expected[index + 2] as i32).abs() as u8,
+                255,
+            ]);
         } else {
             *pixel = image::Rgba([0u8, 0u8, 0u8, 0u8]); // Transparent for no difference
         }
@@ -74,9 +88,6 @@ mod map_tests {
         let travel = Travel::new(map.clone(), (198, 390), (330, 512)).unwrap();
         Python::with_gil(|py| -> Result<(), PyErr> {
             let n: Py<Map> = Py::new(py, map).expect("Failed to create Py<Map>");
-
-            //     We borrow the guard and then dereference
-            //     it to get a mutable reference to Number
             let guard: PyRefMut<'_, Map> = n.bind(py).borrow_mut();
 
             let result = Map::draw_background(
@@ -94,17 +105,14 @@ mod map_tests {
             )
             .expect("Failed to generate bits");
 
-            //     To avoid panics we must dispose of the
-            //     `PyRefMut` before borrowing again.
-            //     drop(guard);
-
-            // let n_immutable: &Map = &n.bind(py).borrow();
             assert_eq!(result.len(), expected.len());
+
             let difference = result
                 .iter()
                 .zip(expected.iter())
                 .filter(|(a, b)| a != b)
                 .collect::<Vec<_>>();
+
             if !difference.is_empty() {
                 // Save both images to the logs folder for debugging
                 log_image_difference(
@@ -120,26 +128,59 @@ mod map_tests {
             Ok(())
         })
         .expect("Failed to execute Python code");
-
-        // let result = Map::draw_background(
-        //     map.draw_path(
-        //         travel,
-        //         1.0,
-        //         2,
-        //         PathStyle::DottedWithOutline([255, 0, 0, 255], [255, 255, 255, 255]),
-        //         PathDisplayType::Revealing(),
-        //         PathProgressDisplayType::Progress()
-        //     ).expect("Failed to draw path"),
-        //     background
-        // ).expect("Failed to generate bits");
-        // assert_eq!(result, expected);
     }
 
+    // This test fails and I am not sure why
     // #[test]
-    // fn test_map_from_image() {
-    //     let map = Map::from_image("tests", "test_image.png");
-    //     assert_eq!(map.width, 5);
-    //     assert_eq!(map.height, 5);
-    //     assert_eq!(map.bits.len(), (5 * 5 * 4) as usize);
+    // fn test_map_creation_with_obstacles() {
+    //     let (image, image_width, image_height) = get_image_bits("test_assets", "map.png");
+    //     let (background, _, _) = get_image_bits("test_assets", "background.png");
+    //     let (expected, _, _) = get_image_bits("test_results", "obstacle.png");
+    //     let mut map = Map::new(
+    //         image.clone(),
+    //         image_width,
+    //         image_height,
+    //         20,
+    //         MapType::Limited,
+    //         vec![],
+    //         vec![],
+    //         vec![vec![(160, 240), (134, 253), (234, 257), (208, 239)]],
+    //     );
+    //     let travel = Travel::new(map.clone(), (198, 390), (172, 223)).unwrap();
+
+    //     let result = Map::draw_background(
+    //         map.draw_path(
+    //                 travel,
+    //                 1.0,
+    //                 2,
+    //                 PathStyle::DottedWithOutline([255, 0, 0, 255], [255, 255, 255, 255]),
+    //                 PathDisplayType::Revealing(),
+    //                 PathProgressDisplayType::Travelled(),
+    //             )
+    //             .expect("Failed to draw path"),
+    //         background,
+    //     )
+    //     .expect("Failed to generate bits");
+
+    //     assert_eq!(result.len(), expected.len());
+
+    //     let difference = result
+    //         .iter()
+    //         .zip(expected.iter())
+    //         .filter(|(a, b)| a != b)
+    //         .collect::<Vec<_>>();
+
+    //     if !difference.is_empty() {
+    //         // Save both images to the logs folder for debugging
+    //         log_image_difference(
+    //             &result,
+    //             &expected,
+    //             image_width,
+    //             image_height,
+    //             "test_map_creation_with_obstacles",
+    //         );
+    //     }
+    //     assert_eq!(difference.len(), 0); // Easier to debug in logs
+
     // }
 }

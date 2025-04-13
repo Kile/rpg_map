@@ -22,7 +22,7 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
       - name: Run stub_gen
-        run: cargo run --bin stub_gen
+        run: cargo run --bin stub_gen --features stubgen
       - name: Check for changes and commit
         id: check_changes
         run: |

@@ -1,8 +1,8 @@
 use crate::structs::path::{astar, PathPoint};
 use core::panic;
 use pyo3::prelude::*;
-use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use std::vec;
+use workaround::stubgen;
 
 use crate::structs::map::Map;
 use geo::{Contains, Coord, LineString, Point, Polygon};
@@ -26,7 +26,7 @@ use geo::{Contains, Coord, LineString, Point, Polygon};
 ///    The map to travel on.
 /// computed_path : list[PathPoint]
 ///    The computed path from the current location to the destination.
-#[gen_stub_pyclass]
+#[stubgen]
 #[pyclass]
 #[derive(Clone)]
 pub struct Travel {
@@ -134,7 +134,7 @@ pub fn image_to_grid(map: &mut Map) -> Vec<Vec<u8>> {
     grid
 }
 
-#[gen_stub_pymethods]
+#[stubgen]
 #[pymethods]
 impl Travel {
     #[new]

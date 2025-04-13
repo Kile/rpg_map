@@ -4,7 +4,7 @@ from PIL import Image
 LOCAL_DIR = "../test_assets/map.png"
 BACKGROUND_DIR = "../test_assets/background.png"
 GRID_SIZE = 20
-START, END = (198, 390), (330,  512)
+START, END = (198, 390), (172, 223) # (330,  512)
 START_X, START_Y = START
 
 

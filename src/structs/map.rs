@@ -2,7 +2,7 @@ use crate::structs::path::PathPoint;
 use crate::structs::travel::Travel;
 use geo::{Contains, Coord, LineString, Point, Polygon};
 use pyo3::prelude::*;
-use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pyclass_enum, gen_stub_pymethods};
+use workaround::stubgen;
 
 /// The reveal type of the map.
 ///
@@ -14,7 +14,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pyclass_enum, gen_stub_py
 ///    The map reveals all the unlocked points.
 /// Full
 ///    The map reveals all the points.
-#[gen_stub_pyclass_enum]
+#[stubgen]
 #[pyclass(eq, eq_int)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum MapType {
@@ -37,7 +37,7 @@ pub enum MapType {
 ///    The path is drawn as a solid line with an outline.
 /// DottedWithOutline
 ///    The path is drawn as a dotted line with an outline.
-#[gen_stub_pyclass_enum]
+#[stubgen]
 #[pyclass(eq)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PathStyle {
@@ -58,7 +58,7 @@ pub enum PathStyle {
 ///   The path is drawn from the start to the current position.
 /// Progress
 ///   The path is drawn from the start to the destination. The path already travelled is converted to greyscale.
-#[gen_stub_pyclass_enum]
+#[stubgen]
 #[pyclass(eq)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PathProgressDisplayType {
@@ -77,7 +77,7 @@ pub enum PathProgressDisplayType {
 ///   The path is always drawn below the mask.
 /// AboveMask
 ///   The path is always drawn above the mask.
-#[gen_stub_pyclass_enum]
+#[stubgen]
 #[pyclass(eq)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PathDisplayType {
@@ -117,7 +117,7 @@ pub enum PathDisplayType {
 ///     The height of the map.
 /// unlocked : List[Tuple[int, int]]
 ///     The points that are unlocked on the map.
-#[gen_stub_pyclass]
+#[stubgen]
 #[pyclass]
 #[derive(Clone)]
 pub struct Map {
@@ -162,7 +162,7 @@ fn calculate_grid_points(width: u32, height: u32, grid_size: u32) -> Vec<(u32, u
     grid_points
 }
 
-#[gen_stub_pymethods]
+#[stubgen]
 #[pymethods]
 impl Map {
     #[new]
