@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{Item, parse_macro_input};
+use syn::{parse_macro_input, Item};
 
 #[proc_macro_attribute]
 pub fn stubgen(_attrs: TokenStream, item: TokenStream) -> TokenStream {
