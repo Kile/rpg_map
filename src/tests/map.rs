@@ -46,9 +46,9 @@ fn log_image_difference(
             // );
             // set the pixel color to abs(expected - result)
             *pixel = image::Rgba([
-                (result[index] as i32 - expected[index] as i32).abs() as u8,
-                (result[index + 1] as i32 - expected[index + 1] as i32).abs() as u8,
-                (result[index + 2] as i32 - expected[index + 2] as i32).abs() as u8,
+                (result[index] as i32 - expected[index] as i32).unsigned_abs() as u8,
+                (result[index + 1] as i32 - expected[index + 1] as i32).unsigned_abs() as u8,
+                (result[index + 2] as i32 - expected[index + 2] as i32).unsigned_abs() as u8,
                 255,
             ]);
         } else {
