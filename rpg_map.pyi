@@ -112,7 +112,7 @@ class Map:
 
     def draw_path(self, travel:Travel, percentage:builtins.float, line_width:builtins.int, path_type:PathStyle=..., display_style:PathDisplayType=..., progress_display_type:PathProgressDisplayType=...) -> builtins.list[builtins.int]:
         r"""
-        Draws the path from :func:`Travel.computed_path`` on the image.
+        Draws the path from :func:`Travel.computed_path` on the image.
         
         Parameters
         ----------
@@ -125,7 +125,7 @@ class Map:
         path_type : PathStyle
             The type of path to draw. Can be Solid, Dotted, SolidWithOutline or DottedWithOutline.
         path_display : PathDisplayType
-            The type of path display to use. Can be Revealing, BelowMask or AboveMask.
+            The type of path display to use. Can be BelowMask or AboveMask.
         
         Returns
         -------
@@ -236,14 +236,11 @@ class PathDisplayType(Enum):
     
     Attributes
     ---------
-    Revealing
-      The path is drawn only where the map is unlocked
     BelowMask
       The path is always drawn below the mask.
     AboveMask
       The path is always drawn above the mask.
     """
-    Revealing = auto()
     BelowMask = auto()
     AboveMask = auto()
 
