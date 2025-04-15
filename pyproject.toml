@@ -3,7 +3,7 @@ requires = ["maturin>=1,<2"]
 build-backend = "maturin"
 
 [project]
-name = "rpg-map"
+name = "rpg_map"
 dynamic = ["version"]
 requires-python = ">=3.9"
 classifiers = [
