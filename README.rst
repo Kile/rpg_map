@@ -109,14 +109,14 @@ Examples
 
 Check out these demos:
 
-- ``examples/static_poc.py`` – Generate one image from your code
-- ``examples/pygame_poc`` – Interactively do pathfinding to wherever you click
+- ```examples/static_poc.py`` <https://github.com/Kile/rpg_map/blob/master/examples/static_poc.py>`_ – Generate one image from your code
+- ```examples/pygame_poc`` <https://github.com/Kile/rpg_map/blob/master/examples/pygame_poc.py>`_ – Interactively do pathfinding to wherever you click
 
 
 Contributing & Development
 ==========================
 
-We welcome contributions and ideas! If you'd like to work on `rpg_map` locally, here's how to get started.
+We welcome contributions and ideas! If you'd like to work on ``rpg_map`` locally, here's how to get started.
 
 Set Up the Development Environment
 ----------------------------------
@@ -129,7 +129,7 @@ Set Up the Development Environment
 
       maturin develop --features "extension-module"
 
-2. **Generate Python Typings (``.pyi``)**
+2. **Generate Python Typings ** ( ``.pyi`` )
 
    The library includes a binary that auto-generates Python type stubs. Run it with:
 

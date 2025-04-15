@@ -4,6 +4,9 @@ use geo::{Contains, Coord, LineString, Point, Polygon};
 use pyo3::prelude::*;
 use workaround::stubgen;
 
+const TRANSPARENT_THRESHOLD: u8 = 160; // anything below 160 appears basically fully transparent
+                                       // It also causes issues with tests
+
 /// The reveal type of the map.
 ///
 /// Attributes
@@ -62,17 +65,15 @@ pub enum PathStyle {
 #[pyclass(eq)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PathProgressDisplayType {
-    Remaining(),
-    Travelled(),
-    Progress(),
+    Remaining,
+    Travelled,
+    Progress,
 }
 
 /// The way of how to display the path.
 ///
 /// Attributes
 /// ---------
-/// Revealing
-///   The path is drawn only where the map is unlocked
 /// BelowMask
 ///   The path is always drawn below the mask.
 /// AboveMask
@@ -81,9 +82,8 @@ pub enum PathProgressDisplayType {
 #[pyclass(eq)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PathDisplayType {
-    Revealing(),
-    BelowMask(),
-    AboveMask(),
+    BelowMask,
+    AboveMask,
 }
 
 /// A class representing a map.
@@ -136,6 +136,7 @@ pub struct Map {
     draw_obstacles: bool,
     dots: Vec<(u32, u32, [u8; 4], u32)>, // x, y, color, radius
     should_draw_with_grid: bool,
+    should_draw_extras: bool,
 }
 
 /// Calculates the grid points of the map
@@ -201,6 +202,7 @@ impl Map {
             draw_obstacles: false,
             dots: Vec::new(),
             should_draw_with_grid: false,
+            should_draw_extras: true,
         }
     }
 
@@ -223,7 +225,7 @@ impl Map {
         let mut bytes_clone = bytes.clone(); // We do not want to mutate the original bytes
         for (i, chunk) in background.chunks_exact(4).enumerate() {
             let index = i * 4;
-            if bytes_clone[index + 3] == 0 {
+            if bytes_clone[index + 3] < TRANSPARENT_THRESHOLD {
                 bytes_clone[index..index + 4].copy_from_slice(chunk);
             }
         }
@@ -298,7 +300,7 @@ impl Map {
         true
     }
 
-    /// Draws the path from :func:`Travel.computed_path`` on the image.
+    /// Draws the path from :func:`Travel.computed_path` on the image.
     ///
     /// Parameters
     /// ----------
@@ -311,7 +313,7 @@ impl Map {
     /// path_type : PathStyle
     ///     The type of path to draw. Can be Solid, Dotted, SolidWithOutline or DottedWithOutline.
     /// path_display : PathDisplayType
-    ///     The type of path display to use. Can be Revealing, BelowMask or AboveMask.
+    ///     The type of path display to use. Can be BelowMask or AboveMask.
     ///
     /// Returns
     /// -------
@@ -322,8 +324,8 @@ impl Map {
         percentage,
         line_width,
         path_type = PathStyle::DottedWithOutline([255, 0, 0, 255], [255, 255, 255, 255]),
-        display_style = PathDisplayType::Revealing(),
-        progress_display_type = PathProgressDisplayType::Travelled()
+        display_style = PathDisplayType::BelowMask,
+        progress_display_type = PathProgressDisplayType::Travelled
     ))]
     pub fn draw_path(
         &mut self,
@@ -334,24 +336,26 @@ impl Map {
         display_style: PathDisplayType,
         progress_display_type: PathProgressDisplayType,
     ) -> PyResult<Vec<u8>> {
+        self.should_draw_extras = false; // Extras should be drawn ABOVE the line
         self.line_width_checker(line_width, path_type)?;
         let distance = (line_width * 5) as usize;
-        let mut image = self.setup_image_for_path(display_style);
         let path = travel.computed_path.clone();
         let critical_index = ((path.len() - 1) as f32 * percentage) as usize;
         let to_be_drawn: Vec<PathPoint> = match progress_display_type {
-            PathProgressDisplayType::Remaining() => path[critical_index..].to_vec(),
-            PathProgressDisplayType::Travelled() => path[..=critical_index].to_vec(),
-            PathProgressDisplayType::Progress() => path,
+            PathProgressDisplayType::Remaining => path[critical_index..].to_vec(),
+            PathProgressDisplayType::Travelled => path[..=critical_index].to_vec(),
+            PathProgressDisplayType::Progress => path,
         };
         // Unlock the points traversed so far
-        if display_style != PathDisplayType::BelowMask() {
+        if self.map_type == MapType::Limited {
             travel.computed_path[..=critical_index]
                 .iter()
                 .for_each(|point| {
                     self.unlock_point_from_coordinates(point.x, point.y);
                 });
         }
+
+        let mut image = self.setup_image_for_path(display_style);
 
         for (pos, point) in to_be_drawn.iter().enumerate() {
             if match path_type {
@@ -377,11 +381,14 @@ impl Map {
         }
 
         match display_style {
-            PathDisplayType::BelowMask() | PathDisplayType::Revealing() => match self.map_type {
-                MapType::Hidden | MapType::Limited => Ok(self.mask_image(image)),
-                MapType::Full => Ok(image),
+            PathDisplayType::BelowMask => match self.map_type {
+                MapType::Hidden | MapType::Limited => {
+                    let masked = self.mask_image(image);
+                    Ok(self.draw_extras(masked))
+                }
+                MapType::Full => Ok(self.draw_extras(image)),
             },
-            PathDisplayType::AboveMask() => Ok(image),
+            PathDisplayType::AboveMask => Ok(self.draw_extras(image)),
         }
     }
 
@@ -392,11 +399,12 @@ impl Map {
     /// List[int]
     ///    The bytes of the image with the grid, obstacles, and dots drawn.
     fn full_image(&mut self) -> Vec<u8> {
-        let mut new_bytes = self.bytes.clone();
-        new_bytes = self.draw_obstacles(new_bytes);
-        new_bytes = self.draw_dots(new_bytes);
-        new_bytes = self.draw_with_grid(new_bytes);
-        new_bytes
+        let mut image = self.bytes.clone();
+        image = self.deal_with_transparent_pixels(image);
+        if self.should_draw_extras {
+            image = self.draw_extras(image);
+        }
+        image
     }
 
     /// Returns the masked image. If specified, draws the grid, obstacles, and dots.
@@ -408,10 +416,11 @@ impl Map {
     fn masked_image(&mut self) -> Vec<u8> {
         let mask = self.create_mask();
         let mut image = self.bytes.clone();
-        image = self.draw_obstacles(image);
-        image = self.draw_dots(image);
+        image = self.deal_with_transparent_pixels(image);
         image = Self::put_mask_on_image(self, image, mask);
-        image = self.draw_with_grid(image);
+        if self.should_draw_extras {
+            image = self.draw_extras(image);
+        }
         image
     }
 
@@ -432,6 +441,23 @@ impl Map {
 
 // These methods are not exposed to the Python library
 impl Map {
+    fn deal_with_transparent_pixels(&self, mut image: Vec<u8>) -> Vec<u8> {
+        for chunk in image.chunks_exact_mut(4) {
+            if chunk[3] < TRANSPARENT_THRESHOLD {
+                chunk.copy_from_slice(&[0, 0, 0, 0]);
+            }
+        }
+        image
+    }
+
+    /// Draw any extras on the image including obstacles, dots, and the grid
+    fn draw_extras(&mut self, mut image: Vec<u8>) -> Vec<u8> {
+        image = self.draw_obstacles(image);
+        image = self.draw_dots(image);
+        image = self.draw_with_grid(image);
+        image
+    }
+
     /// Checks if an intersection point is a special point
     fn is_special_point(&self, x: u32, y: u32) -> Option<&(u32, u32)> {
         self.special_points
@@ -743,7 +769,7 @@ impl Map {
     fn setup_image_for_path(&mut self, display_style: PathDisplayType) -> Vec<u8> {
         match self.map_type {
             MapType::Hidden | MapType::Limited => {
-                if display_style == PathDisplayType::AboveMask() {
+                if display_style == PathDisplayType::AboveMask {
                     self.masked_image()
                 } else {
                     self.full_image()
@@ -866,7 +892,7 @@ impl Map {
         critical_index: usize,
     ) -> [u8; 4] {
         match progress_display_type {
-            PathProgressDisplayType::Progress() => {
+            PathProgressDisplayType::Progress => {
                 // If it is before the critical index, make it greyscale
                 if index < critical_index {
                     self.rgba_to_grayscale(&color)

@@ -1,10 +1,10 @@
-from rpg_map import Travel, Map, MapType, PathStyle, PathProgressDisplayType
+from rpg_map import Travel, Map, MapType, PathStyle, PathProgressDisplayType, PathDisplayType
 from PIL import Image
 
 LOCAL_DIR = "../test_assets/map.png"
 BACKGROUND_DIR = "../test_assets/background.png"
 GRID_SIZE = 20
-START, END = (198, 390), (172, 223) # (330,  512)
+START, END = (198, 390), (330,  512)
 START_X, START_Y = START
 
 
@@ -26,14 +26,16 @@ def main():
 
     map.unlock_point_from_coordinates(START_X, START_Y)
     travel = Travel(map, START, END)
-    path_bits = Map.draw_background(
-        map.with_dot(START_X, START_Y, (255, 0, 0, 255), 5).draw_path(
+    path_bits =  Map.draw_background(
+        map.with_dot(START_X, START_Y, (255, 0, 0, 255), 4).draw_path(
             travel,
-            1.0,
+            1,
             2,
             PathStyle.DottedWithOutline((255, 0, 0, 255), (255, 255, 255, 255)),
+            PathDisplayType.BelowMask,
+            PathProgressDisplayType.Progress,
         ),
-        background_bytes,
+        background_bytes
     )
 
     # Display the image

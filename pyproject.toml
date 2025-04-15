@@ -3,7 +3,7 @@ requires = ["maturin>=1,<2"]
 build-backend = "maturin"
 
 [project]
-name = "rpg_map"
+name = "rpg-map"
 dynamic = ["version"]
 requires-python = ">=3.9"
 classifiers = [
@@ -11,3 +11,10 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
+readme = "README.rst"
+license = "MIT"
+license_files = ["LICENSE"]
+description = "A zero dependency, lightweight and fast library to manipulate RPG images written in Rust."
+keywords = ["rpg", "rpg-map", "rpg-map-rs", "rust", "fast", "lightweight", "zero-dependency"]
+author = "Kile"
+urls = {"github" = "https://github.com/Kile/rpg_map"}

@@ -8,3 +8,4 @@ Module contents
    :members:
    :show-inheritance:
    :undoc-members:
+   :imported-members:
