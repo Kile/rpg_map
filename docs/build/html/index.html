@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rpg_map documentation &mdash; rpg_map 0.0.2 documentation</title>
+  <title>rpg_map documentation &mdash; rpg_map 0.0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="_static/documentation_options.js?v=47de8214"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -106,44 +106,88 @@
 <section id="how-it-works">
 <h2>How It Works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
 <p>The library uses step-by-step image processing to reveal and annotate the map. Here’s an overview of the process:</p>
+<p><strong>Code:</strong></p>
+<p>This is the code which was used to generate the final result of the example steps below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rpg_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">Travel</span><span class="p">,</span> <span class="n">Map</span><span class="p">,</span> <span class="n">MapType</span><span class="p">,</span> <span class="n">PathStyle</span><span class="p">,</span> <span class="n">PathProgressDisplayType</span><span class="p">,</span> <span class="n">PathDisplayType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+
+<span class="n">LOCAL_DIR</span> <span class="o">=</span> <span class="s2">&quot;../test_assets/map.png&quot;</span>
+<span class="n">BACKGROUND_DIR</span> <span class="o">=</span> <span class="s2">&quot;../test_assets/background.png&quot;</span>
+<span class="n">GRID_SIZE</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">START</span><span class="p">,</span> <span class="n">END</span> <span class="o">=</span> <span class="p">(</span><span class="mi">198</span><span class="p">,</span> <span class="mi">390</span><span class="p">),</span> <span class="p">(</span><span class="mi">172</span><span class="p">,</span> <span class="mi">223</span><span class="p">)</span>
+<span class="n">START_X</span><span class="p">,</span> <span class="n">START_Y</span> <span class="o">=</span> <span class="n">START</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">LOCAL_DIR</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">)</span>
+<span class="c1"># get image bytes</span>
+<span class="n">image_bytes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span>
+<span class="n">background</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">BACKGROUND_DIR</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">)</span>
+<span class="c1"># get background bytes</span>
+<span class="n">background_bytes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">background</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span>
+   <span class="n">image_bytes</span><span class="p">,</span>
+   <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+   <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+   <span class="n">GRID_SIZE</span><span class="p">,</span>
+   <span class="n">MapType</span><span class="o">.</span><span class="n">Limited</span><span class="p">,</span>
+   <span class="n">obstacles</span><span class="o">=</span><span class="p">[[(</span><span class="mi">160</span><span class="p">,</span> <span class="mi">240</span><span class="p">),</span> <span class="p">(</span><span class="mi">134</span><span class="p">,</span> <span class="mi">253</span><span class="p">),</span> <span class="p">(</span><span class="mi">234</span><span class="p">,</span> <span class="mi">257</span><span class="p">),</span> <span class="p">(</span><span class="mi">208</span><span class="p">,</span> <span class="mi">239</span><span class="p">)]],</span>
+<span class="p">)</span>
+
+<span class="n">travel</span> <span class="o">=</span> <span class="n">Travel</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">START</span><span class="p">,</span> <span class="n">END</span><span class="p">)</span>
+<span class="n">path_bits</span> <span class="o">=</span>  <span class="n">Map</span><span class="o">.</span><span class="n">draw_background</span><span class="p">(</span>
+   <span class="nb">map</span><span class="o">.</span><span class="n">with_dot</span><span class="p">(</span><span class="n">START_X</span><span class="p">,</span> <span class="n">START_Y</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">draw_path</span><span class="p">(</span>
+      <span class="n">travel</span><span class="p">,</span>
+      <span class="mf">1.0</span><span class="p">,</span>
+      <span class="mi">2</span><span class="p">,</span>
+      <span class="n">PathStyle</span><span class="o">.</span><span class="n">DottedWithOutline</span><span class="p">((</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)),</span>
+   <span class="p">),</span>
+   <span class="n">background_bytes</span>
+<span class="p">)</span>
+
+<span class="c1"># Display the image</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">frombytes</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">height</span><span class="p">),</span> <span class="n">path_bits</span><span class="p">)</span>
+<span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><strong>Steps:</strong></p>
 <ol class="arabic">
-<li><p><strong>Draw Obstacles</strong>
-The <code class="docutils literal notranslate"><span class="pre">Map</span></code> class accepts an <code class="docutils literal notranslate"><span class="pre">obstacles</span></code> parameter which allows you to define N-sided polygons. These are rendered onto the map as solid barriers.</p>
+<li><p><strong>Draw Obstacles</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Map</span></code> class accepts an <code class="docutils literal notranslate"><span class="pre">obstacles</span></code> parameter which allows you to define N-sided polygons. These are rendered onto the map as solid barriers.</p>
 <a class="reference internal image-reference" href="https://github.com/Kile/rpg_map/blob/master/assets/1.png?raw=true"><img alt="https://github.com/Kile/rpg_map/blob/master/assets/1.png?raw=true" src="https://github.com/Kile/rpg_map/blob/master/assets/1.png?raw=true" style="width: 600px;" />
 </a>
 </li>
-<li><p><strong>Add Padding and Convert to Pathfinding Grid</strong>
-Obstacles and map edges are padded and the image is converted into a binary map (1 = path, 0 = obstacle) for pathfinding.</p>
+<li><p><strong>Add Padding and Convert to Pathfinding Grid</strong></p>
+<p>Obstacles and map edges are padded and the image is converted into a binary map (1 = path, 0 = obstacle) for pathfinding.</p>
 <a class="reference internal image-reference" href="https://github.com/Kile/rpg_map/blob/master/assets/2.png?raw=true"><img alt="https://github.com/Kile/rpg_map/blob/master/assets/2.png?raw=true" src="https://github.com/Kile/rpg_map/blob/master/assets/2.png?raw=true" style="width: 600px;" />
 </a>
 </li>
-<li><p><strong>Pathfinding with A*</strong>
-The library uses the A* algorithm to find the shortest path from point A to point B. The path is drawn on the map using a customizable style.</p>
+<li><p><strong>Pathfinding with A*</strong></p>
+<p>The library uses the A* algorithm to find the shortest path from point A to point B. The path is drawn on the map using a customizable style.</p>
 <a class="reference internal image-reference" href="https://github.com/Kile/rpg_map/blob/master/assets/3.png?raw=true"><img alt="https://github.com/Kile/rpg_map/blob/master/assets/3.png?raw=true" src="https://github.com/Kile/rpg_map/blob/master/assets/3.png?raw=true" style="width: 600px;" />
 </a>
 </li>
-<li><p><strong>Draw Dots</strong>
-Optional dots can be placed on the map (e.g., for points of interest, the player, markers).</p>
+<li><p><strong>Draw Dots</strong></p>
+<p>Optional dots can be placed on the map (e.g., for points of interest, the player, markers).</p>
 <a class="reference internal image-reference" href="https://github.com/Kile/rpg_map/blob/master/assets/4.png?raw=true"><img alt="https://github.com/Kile/rpg_map/blob/master/assets/4.png?raw=true" src="https://github.com/Kile/rpg_map/blob/master/assets/4.png?raw=true" style="width: 600px;" />
 </a>
 </li>
-<li><p><strong>Divide into Grid Squares</strong>
-The image is divided into equal squares based on the <code class="docutils literal notranslate"><span class="pre">grid_size</span></code> parameter.</p>
+<li><p><strong>Divide into Grid Squares</strong></p>
+<p>The image is divided into equal squares based on the <code class="docutils literal notranslate"><span class="pre">grid_size</span></code> parameter.</p>
 <a class="reference internal image-reference" href="https://github.com/Kile/rpg_map/blob/master/assets/5.png?raw=true"><img alt="https://github.com/Kile/rpg_map/blob/master/assets/5.png?raw=true" src="https://github.com/Kile/rpg_map/blob/master/assets/5.png?raw=true" style="width: 600px;" />
 </a>
 </li>
-<li><p><strong>Reveal Explored Areas</strong>
-A mask overlays the map. Areas near the travel path or manually unlocked via <code class="docutils literal notranslate"><span class="pre">Map.unlock_point</span></code> are revealed in circular zones.</p>
+<li><p><strong>Reveal Explored Areas</strong></p>
+<p>A mask overlays the map. Areas near the travel path or manually unlocked via <code class="docutils literal notranslate"><span class="pre">Map.unlock_point</span></code> are revealed in circular zones.</p>
 <a class="reference internal image-reference" href="https://github.com/Kile/rpg_map/blob/master/assets/6.png?raw=true"><img alt="https://github.com/Kile/rpg_map/blob/master/assets/6.png?raw=true" src="https://github.com/Kile/rpg_map/blob/master/assets/6.png?raw=true" style="width: 600px;" />
 </a>
 </li>
-<li><p><strong>Fill Transparent Areas</strong>
-Any remaining transparent pixels are filled with a background layer.</p>
+<li><p><strong>Fill Transparent Areas</strong></p>
+<p>Any remaining transparent pixels are filled with a background layer.</p>
 <a class="reference internal image-reference" href="https://github.com/Kile/rpg_map/blob/master/assets/7.png?raw=true"><img alt="https://github.com/Kile/rpg_map/blob/master/assets/7.png?raw=true" src="https://github.com/Kile/rpg_map/blob/master/assets/7.png?raw=true" style="width: 600px;" />
 </a>
 </li>
-<li><p><strong>Final Map Output</strong>
-The completed map shows explored areas, paths, markers, and hidden regions yet to be discovered.</p>
+<li><p><strong>Final Map Output</strong></p>
+<p>The completed map shows explored areas, paths, markers, and hidden regions yet to be discovered.</p>
 <a class="reference internal image-reference" href="https://github.com/Kile/rpg_map/blob/master/assets/8.png?raw=true"><img alt="https://github.com/Kile/rpg_map/blob/master/assets/8.png?raw=true" src="https://github.com/Kile/rpg_map/blob/master/assets/8.png?raw=true" style="width: 600px;" />
 </a>
 </li>

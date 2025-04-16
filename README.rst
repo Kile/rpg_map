@@ -41,49 +41,106 @@ How It Works
 
 The library uses step-by-step image processing to reveal and annotate the map. Here's an overview of the process:
 
+**Code:**
+
+This is the code which was used to generate the final result of the example steps below:
+
+.. code:: python
+
+   from rpg_map import Travel, Map, MapType, PathStyle, PathProgressDisplayType, PathDisplayType
+   from PIL import Image
+
+   LOCAL_DIR = "../test_assets/map.png"
+   BACKGROUND_DIR = "../test_assets/background.png"
+   GRID_SIZE = 20
+   START, END = (198, 390), (172, 223)
+   START_X, START_Y = START
+
+   image = Image.open(LOCAL_DIR).convert("RGBA")
+   # get image bytes
+   image_bytes = list(image.tobytes())
+   background = Image.open(BACKGROUND_DIR).convert("RGBA")
+   # get background bytes
+   background_bytes = list(background.tobytes())
+   map = Map(
+      image_bytes,
+      image.size[0],
+      image.size[1],
+      GRID_SIZE,
+      MapType.Limited,
+      obstacles=[[(160, 240), (134, 253), (234, 257), (208, 239)]],
+   )
+
+   travel = Travel(map, START, END)
+   path_bits =  Map.draw_background(
+      map.with_dot(START_X, START_Y, (255, 0, 0, 255), 4).draw_path(
+         travel,
+         1.0,
+         2,
+         PathStyle.DottedWithOutline((255, 0, 0, 255), (255, 255, 255, 255)),
+      ),
+      background_bytes
+   )
+
+   # Display the image
+   image = Image.frombytes("RGBA", (image.width, image.height), path_bits)
+   image.show()
+
+----
+
+**Steps:**
+
 1. **Draw Obstacles**  
+   
    The ``Map`` class accepts an ``obstacles`` parameter which allows you to define N-sided polygons. These are rendered onto the map as solid barriers.
 
    .. image:: https://github.com/Kile/rpg_map/blob/master/assets/1.png?raw=true
       :width: 600
 
 2. **Add Padding and Convert to Pathfinding Grid**  
-   Obstacles and map edges are padded and the image is converted into a binary map (1 = path, 0 = obstacle) for pathfinding.
+   
+   Obstacles and map edges are padded and the image is converted into a binary map (0 = path, 1 = obstacle) for pathfinding.
 
    .. image:: https://github.com/Kile/rpg_map/blob/master/assets/2.png?raw=true
       :width: 600
 
 3. **Pathfinding with A\***  
+   
    The library uses the A* algorithm to find the shortest path from point A to point B. The path is drawn on the map using a customizable style.
 
    .. image:: https://github.com/Kile/rpg_map/blob/master/assets/3.png?raw=true
       :width: 600
 
 4. **Draw Dots**  
+   
    Optional dots can be placed on the map (e.g., for points of interest, the player, markers).
 
    .. image:: https://github.com/Kile/rpg_map/blob/master/assets/4.png?raw=true
       :width: 600
 
 5. **Divide into Grid Squares**  
+   
    The image is divided into equal squares based on the ``grid_size`` parameter.
 
    .. image:: https://github.com/Kile/rpg_map/blob/master/assets/5.png?raw=true
       :width: 600
 
 6. **Reveal Explored Areas**  
+   
    A mask overlays the map. Areas near the travel path or manually unlocked via ``Map.unlock_point`` are revealed in circular zones.
 
    .. image:: https://github.com/Kile/rpg_map/blob/master/assets/6.png?raw=true
       :width: 600
 
 7. **Fill Transparent Areas**  
+   
    Any remaining transparent pixels are filled with a background layer.
 
    .. image:: https://github.com/Kile/rpg_map/blob/master/assets/7.png?raw=true
       :width: 600
 
 8. **Final Map Output**  
+   
    The completed map shows explored areas, paths, markers, and hidden regions yet to be discovered.
 
    .. image:: https://github.com/Kile/rpg_map/blob/master/assets/8.png?raw=true
@@ -111,6 +168,7 @@ Check out these demos:
 
 - `examples/static_poc.py <https://github.com/Kile/rpg_map/blob/master/examples/static_poc.py>`_ – Generate one image from your code
 - `examples/pygame_poc <https://github.com/Kile/rpg_map/blob/master/examples/pygame_poc.py>`_ – Interactively do pathfinding to wherever you click
+- `examples/readme.py <https://github.com/Kile/rpg_map/blob/master/examples/readme.py>`_ – The code used to generate the final image in the steps breakdown in this README
 
 
 Contributing & Development
