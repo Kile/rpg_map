@@ -146,6 +146,25 @@ impl Travel {
         // draw obstacles on the map
         let mut grid = image_to_grid(&mut map);
 
+        // If current location or destination is out of bounds, return an error
+        if current_location.0 >= map.width
+            || current_location.1 >= map.height
+            || destination.0 >= map.width
+            || destination.1 >= map.height
+        {
+            return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
+                "Current location or destination is out of bounds",
+            ));
+        }
+        // If current location or destination is an obstacle, return an error
+        if grid[current_location.1 as usize][current_location.0 as usize] == 1
+            || grid[destination.1 as usize][destination.0 as usize] == 1
+        {
+            return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
+                "Current location or destination is an obstacle",
+            ));
+        }
+
         // put in start and end
         grid[current_location.1 as usize][current_location.0 as usize] = 2;
         grid[destination.1 as usize][destination.0 as usize] = 3;

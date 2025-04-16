@@ -6,9 +6,8 @@
 rpg_map documentation
 =================================================
 
-.. processed_readme:: README.rst
+.. include:: ../../README.rst
    :end-before: Contributing & Development
-   :replace: demos/=_static/demos/
 
 .. toctree::
    :maxdepth: 2

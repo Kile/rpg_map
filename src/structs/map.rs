@@ -353,6 +353,11 @@ impl Map {
                 .for_each(|point| {
                     self.unlock_point_from_coordinates(point.x, point.y);
                 });
+        } else if self.map_type == MapType::Hidden {
+            self.unlock_point_from_coordinates(
+                travel.computed_path[critical_index].x,
+                travel.computed_path[critical_index].y,
+            );
         }
 
         let mut image = self.setup_image_for_path(display_style);

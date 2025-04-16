@@ -20,7 +20,7 @@ def main():
         image.size[0],
         image.size[1],
         GRID_SIZE,
-        MapType.Limited,
+        MapType.Hidden,
         obstacles=[[(160, 240), (134, 253), (234, 257), (208, 239)]],
     )
 
@@ -29,10 +29,10 @@ def main():
     path_bits =  Map.draw_background(
         map.with_dot(START_X, START_Y, (255, 0, 0, 255), 4).draw_path(
             travel,
-            1,
+            0.5,
             2,
             PathStyle.DottedWithOutline((255, 0, 0, 255), (255, 255, 255, 255)),
-            PathDisplayType.BelowMask,
+            PathDisplayType.AboveMask,
             PathProgressDisplayType.Progress,
         ),
         background_bytes

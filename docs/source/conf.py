@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath('./_ext')) # If your _ext directory is in doc
 project = 'rpg_map'
 copyright = '2025, Kile'
 author = 'Kile'
-release = '0.0.2'
+release = '0.0.3'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -25,7 +25,6 @@ extensions = [
     'sphinx.ext.intersphinx', # To link to other projects' documentation
     'sphinx.ext.viewcode',  # To include links to the source code
     'sphinx_rtd_theme',     # To use the Read the Docs theme
-    "process_readme", # Custom extension to process README files
 ]
 
 templates_path = ['_templates']

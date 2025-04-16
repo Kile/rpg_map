@@ -37,7 +37,7 @@ jobs:
       - name: Check for changes and commit
         id: changes
         run: |
-          cd docs/build/html
+          cd docs/build
           # Check if there are any changes in the generated documentation
           if [[ -n $(git status --porcelain) ]]; then
             echo "::warning title=Documentation Changes::Documentation changes detected!"

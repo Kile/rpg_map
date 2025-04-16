@@ -44,49 +44,49 @@ The library uses step-by-step image processing to reveal and annotate the map. H
 1. **Draw Obstacles**  
    The ``Map`` class accepts an ``obstacles`` parameter which allows you to define N-sided polygons. These are rendered onto the map as solid barriers.
 
-   .. image:: demos/1.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/1.png?raw=true
       :width: 600
 
 2. **Add Padding and Convert to Pathfinding Grid**  
    Obstacles and map edges are padded and the image is converted into a binary map (1 = path, 0 = obstacle) for pathfinding.
 
-   .. image:: demos/2.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/2.png?raw=true
       :width: 600
 
 3. **Pathfinding with A\***  
    The library uses the A* algorithm to find the shortest path from point A to point B. The path is drawn on the map using a customizable style.
 
-   .. image:: demos/3.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/3.png?raw=true
       :width: 600
 
 4. **Draw Dots**  
    Optional dots can be placed on the map (e.g., for points of interest, the player, markers).
 
-   .. image:: demos/4.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/4.png?raw=true
       :width: 600
 
 5. **Divide into Grid Squares**  
    The image is divided into equal squares based on the ``grid_size`` parameter.
 
-   .. image:: demos/5.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/5.png?raw=true
       :width: 600
 
 6. **Reveal Explored Areas**  
    A mask overlays the map. Areas near the travel path or manually unlocked via ``Map.unlock_point`` are revealed in circular zones.
 
-   .. image:: demos/6.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/6.png?raw=true
       :width: 600
 
 7. **Fill Transparent Areas**  
    Any remaining transparent pixels are filled with a background layer.
 
-   .. image:: demos/7.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/7.png?raw=true
       :width: 600
 
 8. **Final Map Output**  
    The completed map shows explored areas, paths, markers, and hidden regions yet to be discovered.
 
-   .. image:: demos/8.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/8.png?raw=true
       :width: 600
 
 Advanced Features
@@ -95,13 +95,13 @@ Advanced Features
 - You can define **special grid points** where the reveal radius is larger — perfect for cities or key landmarks.
 - The library supports **tons of styles** for different themes and usecases.
 
-   .. image:: demos/9.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/9.png?raw=true
       :width: 300
-   .. image:: demos/10.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/10.png?raw=true
       :width: 300
-   .. image:: demos/11.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/11.png?raw=true
       :width: 300
-   .. image:: demos/12.png
+   .. image:: https://github.com/Kile/rpg_map/blob/master/assets/12.png?raw=true
       :width: 300
 
 Examples
