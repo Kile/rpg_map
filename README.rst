@@ -168,7 +168,7 @@ Check out these demos:
 
 - `examples/static_poc.py <https://github.com/Kile/rpg_map/blob/master/examples/static_poc.py>`_ – Generate one image from your code
 - `examples/pygame_poc <https://github.com/Kile/rpg_map/blob/master/examples/pygame_poc.py>`_ – Interactively do pathfinding to wherever you click
-- `examples/readme.py <https://github.com/Kile/rpg_map/blob/master/examples/readme.py>`_ – The code used to generate the final image in the steps breakdown in this README
+- `examples/readme.py <https://github.com/Kile/rpg_map/blob/master/examples/readme.py>`_ – The code used to automatically generate the images in this README
 
 
 Contributing & Development

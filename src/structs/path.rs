@@ -1,11 +1,15 @@
 use pyo3::prelude::pyclass;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap};
+use workaround::stubgen;
 
+#[stubgen]
 #[pyclass]
 #[derive(Clone, PartialEq, Eq, Debug, Copy)]
 pub struct PathPoint {
+    #[pyo3(get)]
     pub x: u32,
+    #[pyo3(get)]
     pub y: u32,
 }
 

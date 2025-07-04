@@ -2,7 +2,7 @@ name: Build and Deploy Documentation
 
 on:
   workflow_run:
-    workflows: ["Generate stub file"] # Build docs after stub file is built
+    workflows: ["Generate docs images"] # Build docs after stub file is built
     types: 
       - completed
 

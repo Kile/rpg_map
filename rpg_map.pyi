@@ -92,6 +92,12 @@ class Map:
         """
         ...
 
+    def clear_extras(self) -> Map:
+        r"""
+        Clears all internal variables that may be set to true to start with a clean slate
+        """
+        ...
+
     def unlock_point_from_coordinates(self, x:builtins.int, y:builtins.int) -> builtins.bool:
         r"""
         Takes in a coordinate, if it is close to an "unlocked" grid point it will unlock it and return true, if the point is already unlocked it will return false
@@ -169,6 +175,10 @@ class Map:
         ...
 
 
+class PathPoint:
+    x: builtins.int
+    y: builtins.int
+
 class Travel:
     r"""
     A class representing a travel from one point to another on a map.
@@ -186,11 +196,10 @@ class Travel:
         
     Attributes
     ---------
-    map : Map
-       The map to travel on.
     computed_path : list[PathPoint]
        The computed path from the current location to the destination.
     """
+    computed_path: builtins.list[PathPoint]
     def __new__(cls,map:Map, current_location:tuple[builtins.int, builtins.int], destination:tuple[builtins.int, builtins.int]): ...
     @staticmethod
     def dbg_map(map:Map) -> builtins.list[builtins.int]:

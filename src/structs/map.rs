@@ -274,6 +274,14 @@ impl Map {
         slf
     }
 
+    /// Clears all internal variables that may be set to true to start with a clean slate
+    pub fn clear_extras(mut slf: PyRefMut<'_, Self>) -> PyRefMut<'_, Self> {
+        slf.dots.clear();
+        slf.draw_obstacles = false;
+        slf.should_draw_with_grid = false;
+        slf
+    }
+
     /// Takes in a coordinate, if it is close to an "unlocked" grid point it will unlock it and return true, if the point is already unlocked it will return false
     ///
     /// Parameters

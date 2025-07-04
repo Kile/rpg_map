@@ -22,8 +22,6 @@ use geo::{Contains, Coord, LineString, Point, Polygon};
 ///     
 /// Attributes
 /// ---------
-/// map : Map
-///    The map to travel on.
 /// computed_path : list[PathPoint]
 ///    The computed path from the current location to the destination.
 #[stubgen]
@@ -31,6 +29,7 @@ use geo::{Contains, Coord, LineString, Point, Polygon};
 #[derive(Clone)]
 pub struct Travel {
     pub map: Map,
+    #[pyo3(get)]
     pub computed_path: Vec<PathPoint>,
 }
 
