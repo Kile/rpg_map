@@ -207,7 +207,7 @@ impl Travel {
                     _ => panic!("Invalid grid value"),
                 };
                 if y * map.width as usize + x + 4 >= long_map.len() {
-                    println!("{:?}", byte);
+                    println!("{byte:?}");
                     continue;
                 }
                 long_map
