@@ -41,7 +41,7 @@ extern crate image;
 
 /// Get image bits using the Rust image library
 pub fn get_image_bits(directory: &str, filename: &str) -> (Vec<u8>, u32, u32) {
-    let img = image::open(format!("{}/{}", directory, filename)).unwrap();
+    let img = image::open(format!("{directory}/{filename}")).unwrap();
     let img = img.to_rgba8();
     let (width, height) = img.dimensions();
     let img = img.into_raw();
@@ -102,7 +102,7 @@ fn log_image_difference(
     )
     .unwrap();
     result_image
-        .save(format!("src/tests/logs/{}_result.png", name))
+        .save(format!("src/tests/logs/{name}_result.png"))
         .expect("Failed to save result image");
 
     // Generate a new image with the differences
@@ -131,6 +131,6 @@ fn log_image_difference(
         }
     }
     diff_image
-        .save(format!("src/tests/logs/{}_diff.png", name))
+        .save(format!("src/tests/logs/{name}_diff.png"))
         .expect("Failed to save diff image");
 }
