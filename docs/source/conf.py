@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath('./_ext')) # If your _ext directory is in doc
 project = 'rpg_map'
 copyright = '2025, Kile'
 author = 'Kile'
-release = '0.0.3'
+release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

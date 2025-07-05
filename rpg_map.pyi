@@ -3,7 +3,7 @@
 
 import builtins
 import typing
-from enum import Enum, auto
+from enum import Enum
 
 class Map:
     r"""
@@ -42,7 +42,7 @@ class Map:
     width: builtins.int
     height: builtins.int
     unlocked: builtins.list[tuple[builtins.int, builtins.int]]
-    def __new__(cls,bytes:typing.Sequence[builtins.int], width:builtins.int, height:builtins.int, grid_size:builtins.int, map_type:MapType=..., unlocked:typing.Sequence[tuple[builtins.int, builtins.int]]=[], special_points:typing.Sequence[tuple[builtins.int, builtins.int]]=[], obstacles:typing.Sequence[typing.Sequence[tuple[builtins.int, builtins.int]]]=[]): ...
+    def __new__(cls, bytes:typing.Sequence[builtins.int], width:builtins.int, height:builtins.int, grid_size:builtins.int, map_type:MapType=MapType.Full, unlocked:typing.Sequence[tuple[builtins.int, builtins.int]]=[], special_points:typing.Sequence[tuple[builtins.int, builtins.int]]=[], obstacles:typing.Sequence[typing.Sequence[tuple[builtins.int, builtins.int]]]=[]) -> Map: ...
     @staticmethod
     def draw_background(bytes:typing.Sequence[builtins.int], background:typing.Sequence[builtins.int]) -> builtins.list[builtins.int]:
         r"""
@@ -56,8 +56,6 @@ class Map:
         background : Optional[List[int]]
             The bytes of the background of the image.
         """
-        ...
-
     def with_dot(self, x:builtins.int, y:builtins.int, color:typing.Sequence[builtins.int], radius:builtins.int) -> Map:
         r"""
         Adds a dot do be drawn on the map when :func:`Map.full_image`, :func:`Map.masked_image` or :func:`Map.get_bits` is called
@@ -78,26 +76,18 @@ class Map:
         Map
             The map with the dot.
         """
-        ...
-
     def with_grid(self) -> Map:
         r"""
         If called, a grid is drawn on the map when :func:`Map.full_image`, :func:`Map.masked_image` or :func:`Map.get_bits` is called
         """
-        ...
-
     def with_obstacles(self) -> Map:
         r"""
         If called, the obstacles are drawn on the map when :func:`Map.full_image`, :func:`Map.masked_image` or :func:`Map.get_bits` is called
         """
-        ...
-
     def clear_extras(self) -> Map:
         r"""
         Clears all internal variables that may be set to true to start with a clean slate
         """
-        ...
-
     def unlock_point_from_coordinates(self, x:builtins.int, y:builtins.int) -> builtins.bool:
         r"""
         Takes in a coordinate, if it is close to an "unlocked" grid point it will unlock it and return true, if the point is already unlocked it will return false
@@ -114,9 +104,7 @@ class Map:
         bool
             True if the point was unlocked, False otherwise (already unlocked).
         """
-        ...
-
-    def draw_path(self, travel:Travel, percentage:builtins.float, line_width:builtins.int, path_type:PathStyle=..., display_style:PathDisplayType=..., progress_display_type:PathProgressDisplayType=...) -> builtins.list[builtins.int]:
+    def draw_path(self, travel:Travel, percentage:builtins.float, line_width:builtins.int, path_type:PathStyle=..., display_style:PathDisplayType=PathDisplayType.BelowMask, progress_display_type:PathProgressDisplayType=PathProgressDisplayType.Travelled) -> builtins.list[builtins.int]:
         r"""
         Draws the path from :func:`Travel.computed_path` on the image.
         
@@ -138,8 +126,6 @@ class Map:
         List[int]
             The bytes of the image with the path drawn.
         """
-        ...
-
     def full_image(self) -> builtins.list[builtins.int]:
         r"""
         Returns the full image. If specified, draws the grid, obstacles, and dots.
@@ -149,8 +135,6 @@ class Map:
         List[int]
            The bytes of the image with the grid, obstacles, and dots drawn.
         """
-        ...
-
     def masked_image(self) -> builtins.list[builtins.int]:
         r"""
         Returns the masked image. If specified, draws the grid, obstacles, and dots.
@@ -160,8 +144,6 @@ class Map:
         List[int]
           The bytes of the image with the grid, obstacles, and dots drawn.
         """
-        ...
-
     def get_bits(self) -> builtins.list[builtins.int]:
         r"""
         The main method to get the image bytes.
@@ -172,8 +154,6 @@ class Map:
         List[int]
           The bytes of the image with the grid, obstacles, and dots drawn.
         """
-        ...
-
 
 class PathPoint:
     x: builtins.int
@@ -200,7 +180,7 @@ class Travel:
        The computed path from the current location to the destination.
     """
     computed_path: builtins.list[PathPoint]
-    def __new__(cls,map:Map, current_location:tuple[builtins.int, builtins.int], destination:tuple[builtins.int, builtins.int]): ...
+    def __new__(cls, map:Map, current_location:tuple[builtins.int, builtins.int], destination:tuple[builtins.int, builtins.int]) -> Travel: ...
     @staticmethod
     def dbg_map(map:Map) -> builtins.list[builtins.int]:
         r"""
@@ -219,8 +199,6 @@ class Travel:
         list[int]
           A list of bytes representing the black and white view of the map.
         """
-        ...
-
 
 class MapType(Enum):
     r"""
@@ -235,9 +213,9 @@ class MapType(Enum):
     Full
        The map reveals all the points.
     """
-    Hidden = auto()
-    Limited = auto()
-    Full = auto()
+    Hidden = ...
+    Limited = ...
+    Full = ...
 
 class PathDisplayType(Enum):
     r"""
@@ -250,8 +228,8 @@ class PathDisplayType(Enum):
     AboveMask
       The path is always drawn above the mask.
     """
-    BelowMask = auto()
-    AboveMask = auto()
+    BelowMask = ...
+    AboveMask = ...
 
 class PathProgressDisplayType(Enum):
     r"""
@@ -266,9 +244,9 @@ class PathProgressDisplayType(Enum):
     Progress
       The path is drawn from the start to the destination. The path already travelled is converted to greyscale.
     """
-    Remaining = auto()
-    Travelled = auto()
-    Progress = auto()
+    Remaining = ...
+    Travelled = ...
+    Progress = ...
 
 class PathStyle(Enum):
     r"""
@@ -287,9 +265,9 @@ class PathStyle(Enum):
     DottedWithOutline
        The path is drawn as a dotted line with an outline.
     """
-    Debug = auto()
-    Solid = auto()
-    Dotted = auto()
-    SolidWithOutline = auto()
-    DottedWithOutline = auto()
+    Debug = ...
+    Solid = ...
+    Dotted = ...
+    SolidWithOutline = ...
+    DottedWithOutline = ...
 
